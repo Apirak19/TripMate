@@ -10,7 +10,7 @@ const images = [
   "https://via.placeholder.com/800x400?text=Image+4",
 ];
 
-const Carousel = () => {
+const ImageCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -89,4 +89,4 @@ const Carousel = () => {
   );
 };
 
-export default Carousel;
+export default ImageCarousel;

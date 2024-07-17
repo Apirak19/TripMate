@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import NavigationBar from "@/components/navigation/NavigationBar";
-import Carousel from "@/components/Homepage/Carousel";
 import Hero from "@/components/Homepage/Hero";
+import SuggestedTrip from "@/components/Homepage/SuggestedTrip";
 
 const Home = () => {
   return (
@@ -10,6 +10,8 @@ const Home = () => {
       <NavigationBar />
       {/* <Carousel /> */}
       <Hero />
+      <SuggestedTrip />
+      <footer className="h-10">footer</footer>
     </div>
   );
 };
