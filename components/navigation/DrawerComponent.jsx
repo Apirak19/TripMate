@@ -1,20 +1,24 @@
 "use client";
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-import MenuIcon from "@mui/icons-material/Menu";
+import React, { useState } from "react";
+import {
+  Box,
+  Drawer,
+  List,
+  Divider,
+  IconButton,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
+import {
+  MoveToInbox as InboxIcon,
+  Mail as MailIcon,
+  Menu as MenuIcon,
+} from "@mui/icons-material";
 
-const drawer = () => {
-  const [open, setOpen] = React.useState(false);
+const DrawerComponent = () => {
+  const [open, setOpen] = useState(false);
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
@@ -22,7 +26,7 @@ const drawer = () => {
 
   const DrawerList = (
     <Box
-      sx={{ width: "100vw" }}
+      sx={{ width: "60vw" }}
       role="presentation"
       onClick={toggleDrawer(false)}
     >
@@ -56,14 +60,19 @@ const drawer = () => {
 
   return (
     <div>
-      <Button onClick={toggleDrawer(true)} sx={{ color: "white" }}>
+      <IconButton onClick={toggleDrawer(true)} sx={{ color: "white" }}>
         <MenuIcon />
-      </Button>
-      <Drawer open={open} onClose={toggleDrawer(false)} anchor="right">
+      </IconButton>
+      <Drawer
+        open={open}
+        onClose={toggleDrawer(false)}
+        anchor="right"
+        sx={{ marginTop: "64px" }}
+      >
         {DrawerList}
       </Drawer>
     </div>
   );
 };
 
-export default drawer;
+export default DrawerComponent;

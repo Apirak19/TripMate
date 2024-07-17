@@ -1,22 +1,16 @@
-import Drawer from "@/components/navigation/Drawer";
+"use client";
+import React, { useState } from "react";
 import NavigationBar from "@/components/navigation/NavigationBar";
-import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
+import Carousel from "@/components/Homepage/Carousel";
+import Hero from "@/components/Homepage/Hero";
 
-const Home = async () => {
-  const cookieStore = cookies();
-  const supabase = createClient(cookieStore);
-
-  const { data: tags } = await supabase.from("tags").select();
-
-  console.log(tags);
+const Home = () => {
   return (
-    <>
-      {/* <NavigationBar /> */}
-      {tags.map((item) => {
-        return <p className="text-white">{item.name}</p>;
-      })}
-    </>
+    <div className="bg-gradient-to-b from-[#5a8ad6] to-white">
+      <NavigationBar />
+      {/* <Carousel /> */}
+      <Hero />
+    </div>
   );
 };
 
