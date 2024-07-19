@@ -14,6 +14,7 @@ const trips = [
       "I've used react-dnd in the past, but the project seems abandoned. I'm considering react-beautiful-dnd, maintained by Atlassian. Which is your go-to library to create draggable components? I've used react-dnd in the past, but the project seems abandoned. I'm considering react-beautiful-dnd, maintained by Atlassian. Which is your go-to library to create draggable components?",
     likes: 20,
     comments: 20,
+    image: "https://via.placeholder.com/800x400?text=Image+1",
   },
   {
     author: "Apirak Fakin",
@@ -24,6 +25,7 @@ const trips = [
       "I've used react-dnd in the past, but the project seems abandoned. I'm considering react-beautiful-dnd, maintained by Atlassian. Which is your go-to library to create draggable components? I've used react-dnd in the past, but the project seems abandoned. I'm considering react-beautiful-dnd, maintained by Atlassian. Which is your go-to library to create draggable components?",
     likes: 20,
     comments: 20,
+    image: "https://via.placeholder.com/800x400?text=Image+2",
   },
   {
     author: "Apirak Fakin",
@@ -34,6 +36,7 @@ const trips = [
       "I've used react-dnd in the past, but the project seems abandoned. I'm considering react-beautiful-dnd, maintained by Atlassian. Which is your go-to library to create draggable components? I've used react-dnd in the past, but the project seems abandoned. I'm considering react-beautiful-dnd, maintained by Atlassian. Which is your go-to library to create draggable components?",
     likes: 20,
     comments: 20,
+    image: "https://via.placeholder.com/800x400?text=Image+3",
   },
 ];
 
@@ -43,7 +46,7 @@ const TripCarousel = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       handleNext();
-    }, 5000);
+    }, 3000);
     return () => clearInterval(interval);
   }, []);
 
@@ -71,7 +74,7 @@ const TripCarousel = () => {
     >
       {trips.map((trip, index) => (
         <div
-          className={`bg-[#5a8ad6] w-1/2 rounded-xl mx-auto my-20 py-5 px-5 ${
+          className={`bg-[#ab9131] w-1/2 rounded-xl mx-auto my-20 py-5 px-5 ${
             currentIndex === index ? "flex" : "hidden"
           }
           flex-col gap-4 relative
@@ -94,6 +97,9 @@ const TripCarousel = () => {
                 read more
               </a>
             </p>
+          </div>
+          <div>
+            <img src={trip.image} alt="" />
           </div>
           <div className="flex gap-4">
             <div className="flex gap-2 rounded-xl bg-[#2b6086] py-1 px-4">
