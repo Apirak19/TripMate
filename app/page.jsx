@@ -1,16 +1,14 @@
-"use client";
-import React, { useState } from "react";
-import NavigationBar from "@/components/navigation/NavigationBar";
+import React from "react";
 import Hero from "@/components/Homepage/Hero";
 import SuggestedTrip from "@/components/Homepage/SuggestedTrip";
+import Testimonial from "@/components/Homepage/Testimonial";
 
 const Home = () => {
   return (
-    <div className="bg-gradient-to-b from-[#5a8ad6] via-[#8ea6ab] to-[#5a8ad6]">
-      <NavigationBar />
-      {/* <Carousel /> */}
+    <div className="w-full">
       <Hero />
       <SuggestedTrip />
+      <Testimonial />
       <footer className="h-10">footer</footer>
     </div>
   );
