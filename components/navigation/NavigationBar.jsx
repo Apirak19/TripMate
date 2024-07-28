@@ -16,46 +16,62 @@ const NavigationBar = () => {
   return (
     <AppBar
       position="static"
-      sx={{ boxShadow: "none", backgroundColor: "#031e54" }}
+      sx={{ boxShadow: "none" }}
+      className="bg-mainColor"
     >
       <Container maxWidth="xl">
         <Toolbar
           disableGutters
           sx={{ display: "flex", justifyContent: "space-between" }}
         >
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: "flex",
-              fontFamily: "monospace",
-              fontWeight: 700,
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            TripMate
-          </Typography>
+          <div className="flex items-center gap-8">
+            <Typography
+              variant="h4"
+              noWrap
+              component="a"
+              href="#app-bar-with-responsive-menu"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                fontFamily: "monospace",
+                fontWeight: 700,
+                color: "inherit",
+                textDecoration: "none",
+                textOverflow: "initial",
+              }}
+            >
+              TripMate
+            </Typography>
+
+            <Box
+              sx={{
+                display: { xs: "none", md: "flex" },
+                alignItems: "center",
+                justifyContent: "start",
+                gap: "20px",
+              }}
+            >
+              {pages.map((page) => (
+                <Button
+                  key={page}
+                  sx={{
+                    color: "white",
+                    fontSize: "1rem",
+                  }}
+                >
+                  {page}
+                </Button>
+              ))}
+            </Box>
+          </div>
 
           <Box
             sx={{
-              flexGrow: 1,
               display: { xs: "none", md: "flex" },
-              justifyContent: "start",
-              paddingLeft: "7%",
-              gap: "5%",
+              alignItems: "center",
+              gap: "15%",
             }}
           >
-            {pages.map((page) => (
-              <Button key={page} sx={{ my: 2, color: "white" }}>
-                {page}
-              </Button>
-            ))}
-          </Box>
-          <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", gap: "15%" }}>
             <DarkModeButton />
             <Button className="text-white hover:bg-white hover:text-blue-500  rounded-md px-3 text-nowrap">
               Log in

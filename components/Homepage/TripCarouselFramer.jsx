@@ -14,7 +14,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import InsertCommentOutlinedIcon from '@mui/icons-material/InsertCommentOutlined';
+import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined";
 
 const DRAG_BUFFER = 50;
 const SPRING_OPTIONS = {
@@ -40,7 +40,7 @@ export default function TripCarousel({ trips }) {
           return prev + 1;
         });
       }
-    }, 6000);
+    }, 15000); // Set interval to 10 seconds
 
     return () => clearInterval(intervalRef);
   }, []);
@@ -55,7 +55,7 @@ export default function TripCarousel({ trips }) {
   };
 
   return (
-    <div className="relative overflow-hidden py-8">
+    <div className="relative overflow-hidden w-full">
       <motion.div
         drag="x"
         dragConstraints={{
@@ -91,9 +91,15 @@ const Trips = ({ trips, tripIndex }) => {
             scale: tripIndex === index ? 0.95 : 0.85,
           }}
           transition={SPRING_OPTIONS}
-          className="aspect-video w-screen shrink-0 rounded-xl flex flex-col items-center"
+          className="aspect-video w-full shrink-0 rounded-xl flex flex-col items-center"
         >
-          <Card sx={{ width: "100%", maxWidth:"900px", paddingX: "2.5%", paddingY: "1%", paddingBottom: "20px" }} key={index}>
+          <Card
+            sx={{
+              width: "100%",
+              paddingBottom: "2rem",
+            }}
+            key={index}
+          >
             <CardHeader
               avatar={
                 <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
@@ -110,9 +116,9 @@ const Trips = ({ trips, tripIndex }) => {
             />
             <CardMedia
               component="img"
-              height="194"
               image={trip.image}
               alt={trip.title}
+              sx={{ objectFit: "cover" }}
             />
             <CardContent>
               <Typography variant="body2" color="text.secondary">
@@ -139,7 +145,11 @@ const Trips = ({ trips, tripIndex }) => {
                 <ShareIcon />
               </IconButton>
             </CardActions>
-            <input type="text" className="w-full px-4" placeholder="add a comment"/>
+            <input
+              type="text"
+              className="w-full px-2 mx-4"
+              placeholder="add a comment"
+            />
           </Card>
         </motion.div>
       ))}
@@ -149,14 +159,14 @@ const Trips = ({ trips, tripIndex }) => {
 
 const Dots = ({ trips, tripIndex, setTripIndex }) => {
   return (
-    <div className="mt-4 flex w-full justify-center gap-2">
+    <div className="flex w-full justify-center gap-2">
       {trips.map((_, index) => {
         return (
           <button
             key={index}
             onClick={() => setTripIndex(index)}
             className={`h-3 w-3 rounded-full transition-colors ${
-              index === tripIndex ? "bg-neutral-50" : "bg-neutral-500"
+              index === tripIndex ? "bg-mainColor" : "border-2 border-mainColor"
             }`}
           />
         );

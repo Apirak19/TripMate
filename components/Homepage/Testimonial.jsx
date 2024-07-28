@@ -1,5 +1,7 @@
 import React from "react";
 import TestimonialCarousel from "./TestimonialCarousel";
+import OverallReview from "./OverallReview";
+import IndividualReview from "./IndividualReview";
 
 const Testimonial = () => {
   const customers = [
@@ -26,9 +28,17 @@ const Testimonial = () => {
     },
   ];
   return (
-    <div>
+    <div className="w-full max-w-[950px] mt-2 py-4 px-5 flex flex-col items-center bg-white rounded-lg gap-4">
+      <h2 className="w-full text-3xl">Review from our trip mates</h2>
+      <div className="flex w-full shadow-card-shadow">
+        <OverallReview />
+        <IndividualReview />
+      </div>
+
+      {/* <div>
       <h1 className="text-5xl font-bold text-center mb-20">Review from our trip mates</h1>
       <TestimonialCarousel customers={customers} />
+    </div> */}
     </div>
   );
 };
