@@ -107,7 +107,7 @@ const IndividualReview = () => {
       className="w-full overflow-x-hidden m-auto"
     >
       {reviews.map((review, index) => (
-        <div key={index} className="py-4 px-14 w-full flex flex-col gap-3 shadow-card-shadow">
+        <div key={index} className="py-4 px-14 w-full flex flex-col gap-3 ">
           <div className="flex flex-col gap-2">
             <StyledRating value={review.rating} readOnly />
             <h4 className="text-start font-semibold">{review.title}</h4>
