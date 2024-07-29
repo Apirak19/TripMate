@@ -3,12 +3,40 @@ import React from "react";
 // import { cookies } from "next/headers";
 import supabase from "@/utils/supabase/supabaseClient";
 import GuideCard from "@/components/guide-page/GuideCard";
+import FilterRadio from "@/components/guide-page/FilterRadio";
 
 const GuidePage = async () => {
   const { data: guideData } = await supabase.from("guides").select("*");
   return (
-    <div className="w-full max-w-[950px] flex justify-center mx-auto gap-4 border-2 border-green-500">
-      <aside className="border-2 border-red-300">
+    <div className="w-full flex flex-col">
+      {/* <div
+        className="w-full h-24"
+        style={{
+          backgroundImage: `url("https://placehold.co/600x400?text=Hello+World")`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      ></div> */}
+      <div className="w-full flex flex-col gap-8 items-center bg-white py-4 mb-4">
+        <div className="flex flex-col gap-4">
+          <h2 className="text-center text-5xl font-semibold">
+            Your Potential Trip Mates
+          </h2>
+          <div className="flex justify-center gap-2">
+            <label htmlFor="sortby">Sort by</label>
+            <div className="flex gap-1">
+              <p>Price</p>
+              <p>Most trips</p>
+            </div>
+            <select name="" id="">
+              <option value="price">Less to more</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div className="w-full max-w-[1000px] flex flex-col mx-auto gap-4 ">
+        {/* <aside className="border-2 border-red-300">
         <div>
           <h4>Region</h4>
           <div className="flex">
@@ -110,42 +138,21 @@ const GuidePage = async () => {
             <label htmlFor="korean">Korean</label>
           </div>
         </div>
-      </aside>
+      </aside> */}
 
-      <main className="w-full flex flex-col gap-4 border-2 border-blue-400">
-        <div
-          className="w-full h-24"
-          style={{
-            backgroundImage: `url("https://placehold.co/600x400?text=Hello+World")`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-          }}
-        ></div>
-        <section className="flex gap-4">
-          <div className="w-full flex flex-col gap-8 items-center bg-white rounded-t-none rounded-lg py-4">
-            <div className="flex flex-col gap-4">
-              <h2 className="text-center text-5xl font-semibold">
-                Your Potential Trip Mates
-              </h2>
-              <div className="flex justify-center gap-2 border-2 border-slate-400">
-                <label htmlFor="sortby">Sort by</label>
-                <div className="flex gap-1">
-                  <p>Price</p>
-                  <p>Most trips</p>
-                </div>
-                <select name="" id="">
-                  <option value="price">Less to more</option>
-                </select>
+        <main className="flex">
+          <FilterRadio />
+          <div className="w-full flex flex-col gap-4 ">
+            <section className="flex gap-4">
+              <div className="w-full flex flex-col gap-4 items-center">
+                <GuideCard guideData={guideData} />
               </div>
-            </div>
-            {/* to add list of guides */}
-            <GuideCard guideData={guideData} />
-          </div>
 
-          <aside className="border-2 border-purple-500 ">right</aside>
-        </section>
-      </main>
+              <aside className="border-2 border-purple-500 ">right</aside>
+            </section>
+          </div>
+        </main>
+      </div>
     </div>
   );
 };
