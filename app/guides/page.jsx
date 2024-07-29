@@ -1,121 +1,13 @@
 import React from "react";
+// import { createClient } from "@/utils/supabase/server";
+// import { cookies } from "next/headers";
+import supabase from "@/utils/supabase/supabaseClient";
+import GuideCard from "@/components/guide-page/GuideCard";
 
-const GuidePage = () => {
-  const guideData = [
-    {
-      profilePicture: "https://placehold.co/600x400",
-      firstName: "John",
-      lastName: "Doe",
-      age: 30,
-      gender: "male",
-      language: ["English", "Spanish"],
-      regions: ["Northern", "Eastern"],
-      rating: 4.9,
-      pricePerDay: 70,
-    },
-    {
-      profilePicture: "https://placehold.co/600x400",
-      firstName: "Emma",
-      lastName: "Smith",
-      age: 26,
-      gender: "female",
-      language: ["English", "French"],
-      regions: ["Central", "Southern"],
-      rating: 4.7,
-      pricePerDay: 60,
-    },
-    {
-      profilePicture: "https://placehold.co/600x400",
-      firstName: "David",
-      lastName: "Johnson",
-      age: 29,
-      gender: "male",
-      language: ["English", "German"],
-      regions: ["Northern", "Western"],
-      rating: 4.8,
-      pricePerDay: 55,
-    },
-    {
-      profilePicture: "https://placehold.co/600x400",
-      firstName: "Olivia",
-      lastName: "Brown",
-      age: 32,
-      gender: "female",
-      language: ["English", "Italian"],
-      regions: ["Central", "Eastern"],
-      rating: 4.6,
-      pricePerDay: 65,
-    },
-    {
-      profilePicture: "https://placehold.co/600x400",
-      firstName: "James",
-      lastName: "Wilson",
-      age: 27,
-      gender: "male",
-      language: ["English", "Spanish"],
-      regions: ["Northern", "Eastern"],
-      rating: 4.4,
-      pricePerDay: 50,
-    },
-    {
-      profilePicture: "https://placehold.co/600x400",
-      firstName: "Sophie",
-      lastName: "Lee",
-      age: 29,
-      gender: "female",
-      language: ["English", "French"],
-      regions: ["Central", "Southern"],
-      rating: 4.7,
-      pricePerDay: 60,
-    },
-    {
-      profilePicture: "https://placehold.co/600x400",
-      firstName: "Daniel",
-      lastName: "Taylor",
-      age: 32,
-      gender: "male",
-      language: ["English", "Chinese"],
-      regions: ["Southern", "Western"],
-      rating: 4.3,
-      pricePerDay: 55,
-    },
-    {
-      profilePicture: "https://placehold.co/600x400",
-      firstName: "Mia",
-      lastName: "Johnson",
-      age: 28,
-      gender: "female",
-      language: ["English", "German"],
-      regions: ["Northern", "Eastern"],
-      rating: 4.8,
-      pricePerDay: 55,
-    },
-    {
-      profilePicture: "https://placehold.co/600x400",
-      firstName: "Noah",
-      lastName: "Brown",
-      age: 31,
-      gender: "male",
-      language: ["English", "Italian"],
-      regions: ["Central", "Southern"],
-      rating: 4.6,
-      pricePerDay: 65,
-    },
-    {
-      profilePicture: "https://placehold.co/600x400",
-      firstName: "Ava",
-      lastName: "Wilson",
-      age: 27,
-      gender: "female",
-      language: ["English", "Spanish"],
-      regions: ["Northern", "Western"],
-      rating: 4.4,
-      pricePerDay: 50,
-    },
-  ];
+const GuidePage = async () => {
+  const { data: guideData } = await supabase.from("guides").select("*");
   return (
-    <div className="w-full max-w-[950px] md:py-4 py-32 flex justify-center mx-auto gap-4 border-2 border-green-500">
-      {/* guides: age, sex, geological, rating, language, price */}
+    <div className="w-full max-w-[950px] flex justify-center mx-auto gap-4 border-2 border-green-500">
       <aside className="border-2 border-red-300">
         <div>
           <h4>Region</h4>
@@ -174,22 +66,14 @@ const GuidePage = () => {
         </div>
 
         <div>
-          <h4>Rating</h4>
           <div className="flex">
-            <input
-              type="radio"
-              id="excellent"
-              name="rating"
-              value="excellent"
-            />
+            <input type="radio" id="excellent" value="excellent" />
             <label htmlFor="excellent">5 stars</label>
           </div>
           <div className="flex">
-            <input type="radio" id="great" name="rating" value="great" />
             <label htmlFor="great">4 stars</label>
           </div>
           <div className="flex">
-            <input type="radio" id="good" name="rating" value="good" />
             <label htmlFor="good">3 stars</label>
           </div>
         </div>
@@ -239,41 +123,24 @@ const GuidePage = () => {
           }}
         ></div>
         <section className="flex gap-4">
-          <div className="w-full flex flex-col gap-8 justify-between bg-white">
-            <div>
-              <h2 className="text-center">List of Guides</h2>
+          <div className="w-full flex flex-col gap-8 items-center bg-white rounded-t-none rounded-lg py-4">
+            <div className="flex flex-col gap-4">
+              <h2 className="text-center text-5xl font-semibold">
+                Your Potential Trip Mates
+              </h2>
               <div className="flex justify-center gap-2 border-2 border-slate-400">
                 <label htmlFor="sortby">Sort by</label>
                 <div className="flex gap-1">
-                  <p>Rating</p>
                   <p>Price</p>
                   <p>Most trips</p>
                 </div>
                 <select name="" id="">
-                  <option value="rating">More to less</option>
                   <option value="price">Less to more</option>
                 </select>
               </div>
             </div>
             {/* to add list of guides */}
-            {guideData.map((guide, index) => (
-              <article key={index} className="flex gap-4">
-                <img
-                  src={guide.profilePicture}
-                  alt="Profile"
-                  className="w-24 h-24"
-                />
-                <div>
-                  <h3>
-                    {guide.firstName} {guide.lastName}
-                  </h3>
-                  <p>Age: {guide.age}</p>
-                  <p>Gender: {guide.gender}</p>
-                  <p>Rating: {guide.rating}</p>
-                  <p>Price per day: ${guide.pricePerDay}</p>
-                </div>
-              </article>
-            ))}
+            <GuideCard guideData={guideData} />
           </div>
 
           <aside className="border-2 border-purple-500 ">right</aside>
