@@ -86,10 +86,12 @@ const SuggestedTrip = () => {
     },
   ];
   return (
-    <div className="w-full max-w-[950px] mt-2 py-4 flex flex-col items-center bg-white rounded-lg">
-      <h2 className="w-full text-3xl px-5">Suggested Trips</h2>
-      <TripCarousel trips={trips} />
-    </div>
+    <section className="w-full max-w-[950px] mt-2 py-4 flex flex-col items-center bg-white rounded-lg">
+        <h2 className="w-full text-3xl px-5">Suggested Trips</h2>
+      <div className="w-full max-w-[680px] mt-2 py-4 flex flex-col items-center bg-white rounded-lg">
+        <TripCarousel trips={trips} />
+      </div>
+    </section>
   );
 };
 

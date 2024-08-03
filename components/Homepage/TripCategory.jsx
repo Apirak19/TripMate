@@ -1,5 +1,5 @@
 import React from "react";
-import "../../app/globals.css"
+import "../../app/globals.css";
 
 const TripCategory = () => {
   const tripCategories = [
@@ -48,26 +48,30 @@ const TripCategory = () => {
   ];
 
   return (
-    <div className="trip-category w-full flex justify-center items-center h-28 bg-white whitespace-nowrap overflow-x-auto">
-      {tripCategories.map((category) => (
-        <div
-          key={category.categoryId}
-          className="flex flex-col flex-shrink-0 items-center w-28 text-slate-700"
-        >
-          <a
-            href={`/${category.categoryName}`}
-            className="flex flex-col items-center  gap-1"
-          >
+    <section className="trip-category w-full flex items-center justify-center h-28 bg-white ">
+      <div className="max-w-[950px] overflow-x-auto mx-auto">
+        <div className="trip-category w-full  flex items-center h-28 ">
+          {tripCategories.map((category) => (
             <div
-              className={`flex items-center justify-center w-12 h-12 bg-[#c7a7c6] rounded-2xl`}
+              key={category.categoryId}
+              className="flex flex-col flex-shrink-0 items-center w-28 text-slate-700"
             >
-              {category.icon}
+              <a
+                href={`/${category.categoryName}`}
+                className="flex flex-col items-center  gap-1"
+              >
+                <div
+                  className={`flex items-center justify-center w-12 h-12 bg-[#c7a7c6] rounded-2xl`}
+                >
+                  {category.icon}
+                </div>
+                <p className="">{category.categoryName}</p>
+              </a>
             </div>
-            <p className="">{category.categoryName}</p>
-          </a>
+          ))}
         </div>
-      ))}
-    </div>
+      </div>
+    </section>
   );
 };
 
