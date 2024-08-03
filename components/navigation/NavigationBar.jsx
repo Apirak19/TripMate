@@ -29,7 +29,7 @@ const NavigationBar = () => {
               variant="h4"
               noWrap
               component="a"
-              href="#app-bar-with-responsive-menu"
+              href="/"
               sx={{
                 display: "flex",
                 alignItems: "center",
