@@ -7,10 +7,10 @@ import { CardActionArea } from "@mui/material";
 
 const guideCard = ({ guideData }) => {
   return (
-    <section className="flex flex-wrap gap-5 justify-center ">
+    <section className="flex flex-wrap gap-5 justify-center py-5">
       {guideData.map((guide, index) => (
         <article
-          className="w-full max-w-[375px] p-4 bg-white rounded-lg shadow-card-shadow flex flex-col gap-4 relative"
+          className="w-full max-w-[345px] p-4 bg-white rounded-lg shadow-card-shadow flex flex-col gap-4 relative"
           key={guide.guide_id}
         >
           <div
