@@ -96,7 +96,7 @@ const Trips = ({ trips, tripIndex }) => {
           <Card
             sx={{
               width: "100%",
-              paddingBottom: "2rem",
+              paddingBottom: "1rem",
             }}
             key={index}
           >
@@ -118,38 +118,40 @@ const Trips = ({ trips, tripIndex }) => {
               component="img"
               image={trip.image}
               alt={trip.title}
-              sx={{ objectFit: "cover" }}
+              sx={{ objectFit: "cover", draggable: false, WebkitUserSelect: "none" }} 
             />
             <CardContent>
               <Typography variant="body2" color="text.secondary">
                 {trip.content}
               </Typography>
             </CardContent>
-            <CardActions disableSpacing>
-              <IconButton
-                aria-label="add to favorites"
-                onClick={() => setLiked(!liked)}
-              >
-                {liked ? (
-                  <FavoriteIcon color="error" />
-                ) : (
-                  <FavoriteBorderIcon />
-                )}
-              </IconButton>
-              {trip.likes.length}
-              <IconButton aria-label="share">
-                <InsertCommentOutlinedIcon />
-              </IconButton>
-              {trip.comments.length}
-              <IconButton aria-label="share">
-                <ShareIcon />
-              </IconButton>
+            <CardActions disableSpacing className="flex flex-col items-start">
+              <div className="">
+                <IconButton
+                  aria-label="add to favorites"
+                  onClick={() => setLiked(!liked)}
+                >
+                  {liked ? (
+                    <FavoriteIcon color="error" />
+                  ) : (
+                    <FavoriteBorderIcon />
+                  )}
+                </IconButton>
+                {trip.likes.length}
+                <IconButton aria-label="share">
+                  <InsertCommentOutlinedIcon />
+                </IconButton>
+                {trip.comments.length}
+                <IconButton aria-label="share">
+                  <ShareIcon />
+                </IconButton>
+              </div>
+              <input
+                type="text"
+                className="w-full px-2"
+                placeholder="add a comment"
+              />
             </CardActions>
-            <input
-              type="text"
-              className="w-full px-2 mx-4"
-              placeholder="add a comment"
-            />
           </Card>
         </motion.div>
       ))}

@@ -87,7 +87,12 @@ const SuggestedTrip = () => {
   ];
   return (
     <div className="w-full max-w-[950px] mt-2 py-4 flex flex-col items-center bg-white rounded-lg">
-      <h2 className="w-full text-3xl px-5">Suggested Trips</h2>
+      <div className="flex w-full px-5">
+        <h2 className="w-full text-3xl ">Suggested Trips</h2>
+        <a href="" className="text-base text-nowrap leading-10 text-blue-400">
+          see all
+        </a>
+      </div>
       <TripCarousel trips={trips} />
     </div>
   );

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -7,8 +7,10 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import Divider from "@mui/material/Divider";
 
-const filterRadio = () => {
+const FilterRadio = () => {
   const [filterData, setFilterData] = useState({});
+
+  const filterButton = useRef(null);
 
   const handleChange = (event, groupName) => {
     setFilterData((prev) => ({
@@ -52,13 +54,15 @@ const filterRadio = () => {
   ];
 
   return (
-    <aside className="md:sticky top-0 h-fit py-5 w-[24%]">
-      <div className="p-4 bg-white rounded-lg">
-        <h3 className="text-center text-lg font-semibold mb-2">Filter</h3>
+    <aside className="md:sticky md:block hidden top-0 h-fit py-5 w-[24%] ">
+      <div className=" bg-white rounded-lg shadow-card-shadow">
+        <h3 className="text-center text-lg font-semibold bg-blue-100 py-4 rounded-t-lg">
+          Filter
+        </h3>
         <div
-          className="overflow-y-auto"
+          className="overflow-y-auto px-4"
           style={{
-            maxHeight: "calc(100vh - 100px)",
+            maxHeight: "calc(100vh - 200px)",
           }}
         >
           {radioGroups.map((group, index) => (
@@ -93,13 +97,28 @@ const filterRadio = () => {
                     />
                   ))}
                 </RadioGroup>
+                <button
+                  type="submit"
+                  onClick={() => {
+                    console.log("search");
+                  }}
+                  ref={filterButton}
+                  className="hidden"
+                >
+                  search
+                </button>
               </FormControl>
             </div>
           ))}
+        </div>
+        <div className="w-full ">
+          <button className="w-full text-center text-lg font-semibold py-4 bg-slate-50 rounded-b-lg">
+            Search
+          </button>
         </div>
       </div>
     </aside>
   );
 };
 
-export default filterRadio;
+export default FilterRadio;

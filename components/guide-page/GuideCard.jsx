@@ -1,14 +1,15 @@
-import React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import { CardActionArea } from "@mui/material";
+import React, { useState, useContext } from "react";
+import { GuideFilterContext } from "@/contexts/guideFilter";
 
-const guideCard = ({ guideData }) => {
+const GuideCard = () => {
+  const { filteredData, setFilteredData } = useContext(GuideFilterContext);
+  // const [filteredData, setFilteredData] = useState(guideData);
+
+  // console.log("filteredData", filteredData);
+
   return (
     <section className="flex flex-wrap gap-5 justify-center py-5">
-      {guideData.map((guide, index) => (
+      {filteredData.map((guide) => (
         <article
           className="w-full max-w-[345px] p-4 bg-white rounded-lg shadow-card-shadow flex flex-col gap-4 relative"
           key={guide.guide_id}
@@ -32,19 +33,25 @@ const guideCard = ({ guideData }) => {
                   {guide.guide_firstname} {guide.guide_lastname}{" "}
                   <span className="font-normal">({guide.guide_age})</span>
                 </h4>
-                <p className="text-sm leading-4">rating: 5</p>
+                <p className="text-sm leading-4">
+                  rating: {Number(guide.avg.toFixed(2))}
+                </p>
               </div>
             </div>
             <p>
               <span className="font-medium">Language: </span>
-              {guide.guide_language.map((item) => (
-                <span className="pr-2">{item}</span>
+              {guide.guide_language.map((item, index) => (
+                <span className="pr-2" key={index}>
+                  {item}
+                </span>
               ))}
             </p>
             <p>
               <span className="font-medium">Working Area: </span>
-              {guide.guide_preferred_region.map((item) => (
-                <span className="pr-2">{item}</span>
+              {guide.guide_preferred_region.map((item, index) => (
+                <span className="pr-2" key={index}>
+                  {item}
+                </span>
               ))}
             </p>
           </div>
@@ -57,4 +64,4 @@ const guideCard = ({ guideData }) => {
   );
 };
 
-export default guideCard;
+export default GuideCard;
