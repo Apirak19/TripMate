@@ -3,30 +3,22 @@ import React, { useEffect, useContext } from "react";
 import Header from "@/components/guide-page/Header";
 import GuideCard from "@/components/guide-page/GuideCard";
 import FilterRadio from "@/components/guide-page/FilterRadio";
+import GuideDisplay from "@/components/guide-page/GuideDisplay";
 import GuideFilterProvider from "@/contexts/guideFilter";
 
 const GuidePage = () => {
   // const { filteredData, loading, error } = useContext(GuideFilterContext);
-    return (
+  return (
     <GuideFilterProvider>
       <div className="w-full flex flex-col">
         {/* header */}
         <Header />
 
         {/* body */}
-        <div className="w-full max-w-[1000px] flex flex-col mx-auto gap-4 ">
-          <main className="flex flex-col gap-4 px-4 md:flex-row relative">
+        <div className="w-full max-w-[1140px] flex flex-col mx-auto gap-4 ">
+          <main className="w-full flex flex-col gap-4 px-4 md:flex-row relative">
             <FilterRadio />
-            <div className="w-full">
-              <section className="flex flex-col md:flex-row gap-4">
-                <div className="w-full flex flex-col gap-4 items-center">
-                  {/* <GuideCard guideData={guideData.rows} /> */}
-                  <GuideCard />
-                </div>
-
-                {/* <aside className="border-2 border-purple-500 ">right</aside> */}
-              </section>
-            </div>
+            <GuideDisplay />
           </main>
         </div>
       </div>

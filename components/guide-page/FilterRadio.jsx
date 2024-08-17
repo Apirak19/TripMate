@@ -1,24 +1,56 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import Divider from "@mui/material/Divider";
+import { GuideFilterContext } from "@/contexts/guideFilter";
 
 const FilterRadio = () => {
-  const [filterData, setFilterData] = useState({});
+  const {filterData, updateFilteredData} = useContext(GuideFilterContext);
+  const [filterOptions, setFilterOptions] = useState({});
+  const numberOfKeys = Object.keys(filterOptions).length;
 
-  const filterButton = useRef(null);
+  const resetOptions = () => {
+    setFilterOptions({});
+  };
 
   const handleChange = (event, groupName) => {
-    setFilterData((prev) => ({
-      ...prev,
-      [groupName]: event.target.value,
+    const selectedValue = event.target.value;
+
+    setFilterOptions((prevState) => ({
+      ...prevState,
+      [groupName]: selectedValue, // Update the state with the new value for the group
     }));
-    console.log(filterData);
   };
+
+  const handleSearch = () => {
+    fetch("/api/guides", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        action: "filter",
+        values: filterOptions,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+        updateFilteredData(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  useEffect(() => {
+    console.log("filterOptions", filterOptions);
+    console.log("numbers", numberOfKeys);
+  }, [filterOptions]);
 
   const radioGroups = [
     {
@@ -31,11 +63,11 @@ const FilterRadio = () => {
     },
     {
       name: "Gender",
-      values: ["female", "male"],
+      values: ["Female", "Male"],
     },
     {
       name: "Rating",
-      values: ["average", "excellent", "good"],
+      values: ["Average", "Good", "Excellent"],
     },
     {
       name: "Language",
@@ -54,11 +86,23 @@ const FilterRadio = () => {
   ];
 
   return (
-    <aside className="md:sticky md:block hidden top-0 h-fit py-5 w-[24%] ">
+    <aside className="md:sticky md:block hidden top-0 h-fit py-5 w-full max-w-[275px]">
       <div className=" bg-white rounded-lg shadow-card-shadow">
-        <h3 className="text-center text-lg font-semibold bg-blue-100 py-4 rounded-t-lg">
-          Filter
-        </h3>
+        <article
+          className={`flex items-center text-center  bg-blue-100 py-4 px-7 rounded-t-lg ${
+            numberOfKeys === 0 ? "justify-center" : "justify-between"
+          }`}
+        >
+          <h4 className="text-lg font-semibold">Filter</h4>
+          {numberOfKeys > 0 && (
+            <h4
+              className="text-sm hover:text-blue-400 cursor-pointer"
+              onClick={resetOptions}
+            >
+              reset
+            </h4>
+          )}
+        </article>
         <div
           className="overflow-y-auto px-4"
           style={{
@@ -81,10 +125,11 @@ const FilterRadio = () => {
                 >
                   {group.name}
                 </FormLabel>
+
                 <RadioGroup
                   aria-labelledby={`controlled-radio-buttons-group-${group.name}`}
                   name={`controlled-radio-buttons-group-${group.name}`}
-                  value={filterData[group.name]}
+                  value={filterOptions[group.name] || ""}
                   onChange={(event) => handleChange(event, group.name)}
                 >
                   {group.values.map((option) => (
@@ -97,22 +142,15 @@ const FilterRadio = () => {
                     />
                   ))}
                 </RadioGroup>
-                <button
-                  type="submit"
-                  onClick={() => {
-                    console.log("search");
-                  }}
-                  ref={filterButton}
-                  className="hidden"
-                >
-                  search
-                </button>
               </FormControl>
             </div>
           ))}
         </div>
         <div className="w-full ">
-          <button className="w-full text-center text-lg font-semibold py-4 bg-slate-50 rounded-b-lg">
+          <button
+            className="w-full text-center text-lg font-semibold py-4 bg-slate-50 rounded-b-lg"
+            onClick={handleSearch}
+          >
             Search
           </button>
         </div>
