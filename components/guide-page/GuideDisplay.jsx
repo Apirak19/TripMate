@@ -10,7 +10,7 @@ const GuideDisplay = () => {
     <div className="w-full flex items-center justify-center">
       {filteredData.length === 0 ? (
         <div
-          className="inline-block h-[30%] w-[30%] animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] text-blue-400"
+          className="inline-block h-[150px] w-[150px] animate-spin rounded-full border-[20px] border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] text-blue-400"
           role="status"
         ></div>
       ) : (
