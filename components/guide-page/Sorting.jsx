@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
@@ -12,16 +12,24 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
 import SortIcon from "@mui/icons-material/Sort";
+import { GuideFilterContext } from "@/contexts/guideFilter";
 
 const Sorting = () => {
-  const [filterData, setFilterData] = useState({});
+  const { filteredData, updateFilteredData, filterOptions, setFilterOptions } =
+    useContext(GuideFilterContext);
+  const [sortOptions, setSortOptions] = useState({
+    Sort: "Rating",
+    Desc: true,
+  });
+  const [isFlipped, setIsFlipped] = useState(false);
+  useEffect(() => {
+    console.log("sortOptions: ", sortOptions);
+    console.log("filterOptions: ", filterOptions);
+  }, [sortOptions, filterOptions]);
 
-  const handleChange = (event, groupName) => {
-    setFilterData((prev) => ({
-      ...prev,
-      [groupName]: event.target.value,
-    }));
-    console.log(filterData);
+  const getSortedData = async () => {
+    try {
+    } catch {}
   };
 
   const filterGroups = [
@@ -56,6 +64,39 @@ const Sorting = () => {
       ],
     },
   ];
+
+  const handleSort = async (sortType) => {
+    let updatedSortOptions;
+
+    if (sortType === "Switch") {
+      updatedSortOptions = { ...sortOptions, Desc: !sortOptions.Desc };
+      setSortOptions(updatedSortOptions);
+    } else {
+      updatedSortOptions = { ...sortOptions, Sort: sortType };
+      setSortOptions(updatedSortOptions);
+    }
+    try {
+      fetch("/api/guides", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "filter",
+          values: filterOptions,
+          sort: updatedSortOptions,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("data: ", data);
+          updateFilteredData(data);
+        });
+    } catch (error) {
+      console.log("error sort");
+    }
+  };
+
   return (
     <div className="hidden md:flex justify-center w-full max-w-[400px] shadow-card-shadow rounded-lg ">
       <label
@@ -66,14 +107,61 @@ const Sorting = () => {
       </label>
       <div className="flex w-full">
         <button
-          className="border-r-[1px] w-1/2"
+          className={`border-r-[1px] w-1/2  ${
+            sortOptions["Sort"] === "Rating"
+              ? "bg-blue-200 "
+              : "hover:bg-blue-200"
+          } `}
           // onClick={sortByAge}
+          value="Rating"
+          onClick={(e) => {
+            handleSort(e.target.value);
+          }}
+          disabled={sortOptions["Sort"] === "Rating"}
         >
-          Age
+          Rating
         </button>
-        <button className="border-r-[1px] w-1/2">Trips</button>
-        <button className="border-r-[1px] w-1/2">Followers</button>
-        <button className=" px-2">
+        <button
+          className={`border-r-[1px] w-1/2  ${
+            sortOptions["Sort"] === "Trips"
+              ? "bg-blue-200 "
+              : "hover:bg-blue-200"
+          } `}
+          // onClick={sortByAge}
+          value="Trips"
+          onClick={(e) => {
+            handleSort(e.target.value);
+          }}
+          disabled={sortOptions["Sort"] === "Trips"}
+        >
+          Trips
+        </button>
+        <button
+          className={`border-r-[1px] w-1/2  ${
+            sortOptions["Sort"] === "Followers"
+              ? "bg-blue-200 "
+              : "hover:bg-blue-200"
+          } `}
+          // onClick={sortByAge}
+          value="Followers"
+          onClick={(e) => {
+            handleSort(e.target.value);
+          }}
+          disabled={sortOptions["Sort"] === "Followers"}
+        >
+          Followers
+        </button>
+        <button
+          className={` px-2 transform transition-transform duration-300 `}
+          style={{
+            transform: isFlipped ? "rotateX(180deg)" : "rotateX(0deg)",
+          }}
+          value="Switch"
+          onClick={() => {
+            setIsFlipped((prev) => !prev);
+            handleSort("Switch");
+          }}
+        >
           <SortIcon />
         </button>
       </div>

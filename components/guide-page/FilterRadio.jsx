@@ -9,8 +9,14 @@ import Divider from "@mui/material/Divider";
 import { GuideFilterContext } from "@/contexts/guideFilter";
 
 const FilterRadio = () => {
-  const {filterData, updateFilteredData} = useContext(GuideFilterContext);
-  const [filterOptions, setFilterOptions] = useState({});
+  const {
+    filterData,
+    updateFilteredData,
+    getFilteredData,
+    filterOptions,
+    setFilterOptions,
+    setLoading,
+  } = useContext(GuideFilterContext);
   const numberOfKeys = Object.keys(filterOptions).length;
 
   const resetOptions = () => {
@@ -27,6 +33,7 @@ const FilterRadio = () => {
   };
 
   const handleSearch = () => {
+    setLoading(true);
     fetch("/api/guides", {
       method: "POST",
       headers: {
@@ -41,6 +48,7 @@ const FilterRadio = () => {
       .then((data) => {
         console.log("Success:", data);
         updateFilteredData(data);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -48,8 +56,8 @@ const FilterRadio = () => {
   };
 
   useEffect(() => {
-    console.log("filterOptions", filterOptions);
-    console.log("numbers", numberOfKeys);
+    // console.log("filterOptions", filterOptions);
+    // console.log("numbers", numberOfKeys);
   }, [filterOptions]);
 
   const radioGroups = [

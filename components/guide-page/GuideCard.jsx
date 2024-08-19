@@ -32,7 +32,7 @@ const GuideCard = ({guide}) => {
               <span className="font-normal">({guide.guide_age})</span>
             </h4>
             <p className="text-sm leading-4">
-              rating: {Number(guide.avg.toFixed(2))}
+              rating: {Number(guide.avg_rating.toFixed(2))}
             </p>
           </div>
         </div>
