@@ -5,11 +5,50 @@ export async function POST(req) {
   console.log("body", body);
   if (body.action === "getAll") {
     try {
-      const result = await connectionPool.query(`select * from guides g
-            inner join (select guide_id, AVG(rating) as avg_rating from guide_rating
-            group by guide_id) as gr
-            on g.guide_id = gr.guide_id
-            order by gr.avg_rating desc;`);
+      const result = await connectionPool.query(`WITH avg_ratings AS (
+    SELECT
+        guide_id,
+        AVG(rating) AS avg_rating
+    FROM
+        guide_rating
+    GROUP BY
+        guide_id
+),
+followers AS (
+    SELECT
+        guide_id,
+        COUNT(guide_id) AS followers,
+        is_unfollowed
+    FROM
+        guide_follower
+    WHERE
+        is_unfollowed = false
+    GROUP BY
+        guide_id,
+        is_unfollowed
+),
+trip_counts AS (
+    SELECT
+        guide_id,
+        COUNT(guide_id) AS trip_count
+    FROM
+        trips
+    GROUP BY
+        guide_id
+)
+SELECT
+    g.*,
+    ar.avg_rating,
+    f.followers,
+    f.is_unfollowed,
+    tc.trip_count
+FROM
+    guides g
+    INNER JOIN avg_ratings ar ON g.guide_id = ar.guide_id
+    INNER JOIN followers f ON g.guide_id = f.guide_id
+    INNER JOIN trip_counts tc ON g.guide_id = tc.guide_id 
+ORDER BY ar.avg_rating DESC
+`);
 
       // Return the result as JSON
       return new Response(JSON.stringify({ data: result.rows }), {
@@ -129,7 +168,11 @@ FROM
     INNER JOIN followers f ON g.guide_id = f.guide_id
     INNER JOIN trip_counts tc ON g.guide_id = tc.guide_id
 ${conditionKeys.length !== 0 ? `WHERE ${whereCondition}` : ""} 
-${body.sort ? `ORDER BY ${sortOptions[body.sort.Sort]} ${body.sort.Desc ? "DESC" : ""}` : `ORDER BY ar.avg_rating DESC`}
+${
+  body.sort
+    ? `ORDER BY ${sortOptions[body.sort.Sort]} ${body.sort.Desc ? "DESC" : ""}`
+    : `ORDER BY ar.avg_rating DESC`
+}
 `;
 
     console.log("conditionKeys", conditionKeys);
