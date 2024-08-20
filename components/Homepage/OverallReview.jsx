@@ -22,7 +22,7 @@ const OverallReview = () => {
       sx={{
         "& > legend": { mt: 2 },
       }}
-      className="flex flex-col items-center gap-4 bg-blue-100 p-4"
+      className="flex flex-col items-center gap-4 bg-blue-100 p-4 rounded-l-lg"
     >
       <h1 className="text-xl font-semibold">Overall</h1>
       <Typography component="header" className="text-5xl text-blue-400 border-[5px] border-blue-400  rounded-full w-28 h-28 flex items-center justify-center">4.5</Typography>

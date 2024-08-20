@@ -2,6 +2,7 @@ import React from "react";
 import connectionPool from "@/utils/supabase/connectionPool";
 import OverallReview from "@/components/Homepage/OverallReview";
 import IndividualReview from "@/components/Homepage/IndividualReview";
+import TripReview from "@/components/guide-profile/TripReview";
 
 const GuideProfile = async ({ params }) => {
   const { id } = params;
@@ -96,7 +97,7 @@ const GuideProfile = async ({ params }) => {
           {/* left */}
           <div className="w-full max-w-[300px] flex flex-col gap-4">
             {/* short description */}
-            <div className="w-full p-4 bg-slate-100 rounded-xl">
+            <div className="w-full p-4 bg-slate-300 rounded-xl">
               <div>
                 <h1 className="text-2xl font-semibold">Introduction</h1>
                 <h1 className="text-lg">
@@ -108,7 +109,7 @@ const GuideProfile = async ({ params }) => {
             </div>
 
             {/* detail */}
-            <div className="w-full p-4 bg-slate-100 rounded-xl">
+            <div className="w-full p-4 bg-slate-300 rounded-xl">
               <div className="flex gap-1">
                 <h1 className="text-lg font-semibold">Fluent in</h1>
                 <div>
@@ -151,15 +152,30 @@ const GuideProfile = async ({ params }) => {
           </div>
 
           {/* right */}
-          <main className="w-full p-4 bg-slate-100 rounded-xl ">
+          <main className="w-full max-w-[840px] flex flex-col gap-4">
             {/* review */}
-            <div className="flex flex-col gap-4">
+            <div className="w-full max-w-full flex flex-col gap-4 p-4 bg-slate-300 rounded-xl">
               <h1 className="text-2xl font-semibold">Reviews</h1>
               <div className="flex">
                 <OverallReview />
-                <IndividualReview />
+                <TripReview />
               </div>
             </div>
+
+            {/* posts */}
+            <section className="bg-slate-300 rounded-xl">
+              <h1>aaa</h1>
+              <h1>aaa</h1>
+              <h1>aaa</h1>
+              <h1>aaa</h1>
+              <h1>aaa</h1>
+              <h1>aaa</h1>
+              <h1>aaa</h1>
+              <h1>aaa</h1>
+              <h1>aaa</h1>
+              <h1>aaa</h1>
+              <h1>aaa</h1>
+            </section>
           </main>
         </article>
       </div>

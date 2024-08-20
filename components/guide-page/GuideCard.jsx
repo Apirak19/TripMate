@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { GuideFilterContext } from "@/contexts/guideFilter";
+import Link from "next/link";
 
 const GuideCard = ({ guide }) => {
   const { filteredData, setFilteredData } = useContext(GuideFilterContext);
@@ -74,9 +75,11 @@ const GuideCard = ({ guide }) => {
         </p>
 
         <div className="flex gap-4">
+          <Link href={`/guides/${guide.guide_id}`} className="w-full">
           <button className="w-full p-2 border-2 border-blue-400 rounded-lg transform hover:scale-105">
             View Profile
           </button>
+          </Link>
           <button className="w-full p-2 bg-blue-400 text-white rounded-lg transform hover:scale-105">
             Hire
           </button>
