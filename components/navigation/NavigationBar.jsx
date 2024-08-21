@@ -9,8 +9,22 @@ import {
 } from "@mui/material";
 import DrawerComponent from "./DrawerComponent";
 import DarkModeButton from "./DarkModeButton";
+import Link from "next/link";
 
-const pages = ["Products", "Pricing", "Blog"];
+const pages = [
+  {
+    name: "Attractions",
+    link: "/attractions",
+  },
+  {
+    name: "Guides",
+    link: "/guides",
+  },
+  {
+    name: "Posts",
+    link: "/posts",
+  },
+];
 
 const NavigationBar = () => {
   return (
@@ -51,16 +65,17 @@ const NavigationBar = () => {
                 gap: "20px",
               }}
             >
-              {pages.map((page) => (
-                <Button
-                  key={page}
-                  sx={{
-                    color: "white",
-                    fontSize: "1rem",
-                  }}
-                >
-                  {page}
-                </Button>
+              {pages.map((page, index) => (
+                <Link href={page.link} key={index}>
+                  <Button
+                    sx={{
+                      color: "white",
+                      fontSize: "1rem",
+                    }}
+                  >
+                    {page.name}
+                  </Button>
+                </Link>
               ))}
             </Box>
           </div>

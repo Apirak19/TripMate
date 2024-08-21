@@ -46,7 +46,7 @@ const GuideCard = ({ guide }) => {
           <span>Fluent in </span>
           {guide.guide_language.map((item, index) => (
             <>
-              <span className="font-bold text-blue-400 cursor-pointer hover:underline">
+              <span className="font-bold text-blue-400 cursor-pointer hover:underline" key={index}>
                 {item}
               </span>
               {index === guide.guide_language.length - 1 ? "" : <span>, </span>}

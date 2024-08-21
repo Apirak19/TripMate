@@ -105,7 +105,7 @@ const TripReview = () => {
         centerMode={true}
       >
         {reviews.map((review, index) => (
-          <article className="pb-10 pr-10 flex flex-col gap-2">
+          <article className="pb-10 pr-10 flex flex-col gap-2" key={index}>
             <div className="w-full flex gap-4 items-center">
               <div className="bg-slate-200 w-[75px] h-[75px] rounded-lg"></div>
               <div className="text-start">

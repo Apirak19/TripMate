@@ -4,6 +4,7 @@ import OverallReview from "@/components/Homepage/OverallReview";
 import IndividualReview from "@/components/Homepage/IndividualReview";
 import TripReview from "@/components/guide-profile/TripReview";
 import PostCard from "@/components/guide-profile/PostCard";
+import Link from "next/link";
 
 const GuideProfile = async ({ params }) => {
   const { id } = params;
@@ -170,9 +171,12 @@ const GuideProfile = async ({ params }) => {
               <button className="border-blue-400 border-2 text-blue-400 bg-white px-4 py-2 rounded-lg w-[100px]">
                 Follow
               </button>
+
+              <Link href={`/booking?guide_id=${guide.guide_id}`}>
               <button className="bg-blue-400 text-white px-4 py-2 rounded-lg w-[100px]">
                 Hire
-              </button>
+                </button>
+              </Link>
             </div>
           </div>
         </article>
