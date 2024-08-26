@@ -1,11 +1,54 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 
 const TripOption = ({ attractionData, guideData }) => {
+  const today = dayjs(new Date());
+  const tomorrow = today.add(1, "day");
+
+  const [isOneDayTrip, setIsOneDayTrip] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(today);
+  const [numberOfDay, setNumberOfDay] = useState(1);
+  const [destination, setDestination] = useState(null);
+  useEffect(() => {
+    if (isOneDayTrip) {
+      setNumberOfDay(1);
+    } else {
+      setNumberOfDay(endDate.diff(startDate, "day") + 1);
+    }
+    console.log(destination);
+  }, [startDate, endDate, destination]);
+
+  useEffect(() => {
+    if (isOneDayTrip) {
+      setStartDate(today);
+      setEndDate(today);
+    } else {
+      setStartDate(today);
+      setEndDate(tomorrow);
+    }
+  }, [isOneDayTrip]);
+
+  useEffect(() => {
+    console.log(numberOfDay * 2000);
+  }, [numberOfDay]);
+
+  const handleDestinationSelect = (e) => {
+    setDestination(e.target.value);
+  };
+
+  const handleDaySelect = (e) => {
+    if (e.target.value === "One day trip") {
+      setIsOneDayTrip(true);
+    } else if (e.target.value === "Multiple day trip") {
+      setIsOneDayTrip(false);
+    }
+  };
   return (
     <section className="w-full flex gap-4">
       {/* booking form */}
@@ -19,12 +62,16 @@ const TripOption = ({ attractionData, guideData }) => {
             name="destination"
             id=""
             className="w-full border-2 rounded-md px-2 py-2 "
+            defaultValue={"-- attraction --"}
+            onChange={handleDestinationSelect}
           >
-            <option value="" className="text-slate-500" disabled selected>
+            <option className="text-slate-500" disabled>
               -- attraction --
             </option>
             {attractionData.map((item, index) => (
-              <option value={item.attraction_id}>{item.attraction_name}</option>
+              <option value={item.attraction_name} key={index}>
+                {item.attraction_name}
+              </option>
             ))}
           </select>
         </div>
@@ -34,41 +81,87 @@ const TripOption = ({ attractionData, guideData }) => {
             Select travel duration:
           </label>
           <select
-            name="destination"
+            name="duration"
             id=""
             className="w-full border-2 rounded-md px-2 py-2 "
+            onChange={handleDaySelect}
+            defaultValue={"-- duration --"}
           >
-            <option value="" className="text-slate-500" disabled selected>
+            <option className="text-slate-500" disabled>
               -- duration --
             </option>
-            <option value="one-day-trip">One day trip</option>
-            <option value="multiple-day-trip">Multiple day trip</option>
+            <option>One day trip</option>
+            <option>Multiple day trip</option>
           </select>
         </div>
 
-        <div className="w-full flex gap-4 items-center">
-          <label className="w-full font-semibold text-lg">
-            Select first date:
-          </label>
+        {/* select number of days */}
+        {isOneDayTrip === null ? (
+          ""
+        ) : isOneDayTrip ? (
+          <div className="w-full flex gap-4 items-center">
+            <label className="w-full font-semibold text-lg">
+              Select Trip Date:
+            </label>
 
-          <LocalizationProvider dateAdapter={AdapterDayjs} >
-            <DemoContainer components={["DatePicker"]} sx={{ width: "100%" }}>
-              <DatePicker />
-            </DemoContainer>
-          </LocalizationProvider>
-        </div>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={["DatePicker"]} sx={{ width: "100%" }}>
+                <DatePicker
+                  value={startDate}
+                  onChange={(e) => {
+                    console.log("change date", e);
+                    setStartDate(e);
+                    setEndDate(e);
+                  }}
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+          </div>
+        ) : (
+          <>
+            <div className="w-full flex gap-4 items-center">
+              <label className="w-full font-semibold text-lg">
+                Select first date:
+              </label>
 
-        <div className="w-full flex gap-4 items-center">
-          <label className="w-full font-semibold text-lg">
-            Select last date:
-          </label>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer
+                  components={["DatePicker"]}
+                  sx={{ width: "100%" }}
+                >
+                  <DatePicker
+                    value={startDate}
+                    onChange={(e) => {
+                      console.log("change date", e);
+                      setStartDate(e);
+                    }}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+            </div>
 
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={["DatePicker"]} sx={{ width: "100%" }}>
-              <DatePicker />
-            </DemoContainer>
-          </LocalizationProvider>
-        </div>
+            <div className="w-full flex gap-4 items-center">
+              <label className="w-full font-semibold text-lg">
+                Select last date:
+              </label>
+
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer
+                  components={["DatePicker"]}
+                  sx={{ width: "100%" }}
+                >
+                  <DatePicker
+                    value={endDate}
+                    onChange={(e) => {
+                      console.log("change date", e);
+                      setEndDate(e);
+                    }}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+            </div>
+          </>
+        )}
       </article>
 
       {/* all cost */}
@@ -83,13 +176,31 @@ const TripOption = ({ attractionData, guideData }) => {
             </p>
           </div>
 
-          <div className="flex gap-4">
-            <p className="text-xl font-semibold">Total:</p>
-            <p className="text-xl">
-              {guideData.guide_wage}
-              <span className="font-semibold"> THB.</span>
-            </p>
-          </div>
+          {isOneDayTrip !== null && (
+            <div className="flex gap-4">
+              <p className="text-xl font-semibold">Duration: </p>
+              <p className="text-xl">
+                {numberOfDay}
+                {numberOfDay === 1 ? (
+                  <span className="font-semibold"> day</span>
+                ) : (
+                  <span className="font-semibold"> days</span>
+                )}
+              </p>
+            </div>
+          )}
+
+          {isOneDayTrip && destination && (
+            <div className="flex gap-4">
+              <p className="text-xl font-semibold">Total:</p>
+              <p className="text-xl">
+                {guideData.guide_wage * numberOfDay}
+                <span className="font-semibold"> THB.</span>
+              </p>
+            </div>
+          )}
+
+          <button className="bg-blue-400 text-white font-bold py-4 px-3 rounded-lg transform hover:scale-[101%]">Book now</button>
         </div>
       </article>
     </section>

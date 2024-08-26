@@ -15,7 +15,7 @@ const pages = ["Products", "Pricing", "Blog"];
 const Footer = () => {
   return (
     <section className="w-full bg-mainColor flex justify-center">
-      <div className="w-full max-w-[1536px] flex justify-between border-2 p-6">
+      <div className="w-full max-w-[1536px] flex justify-between p-6">
         <div className="w-full max-w-[500px] flex flex-col text-white">
           <Typography
             variant="h4"
