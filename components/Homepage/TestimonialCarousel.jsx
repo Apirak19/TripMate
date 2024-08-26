@@ -84,7 +84,7 @@ const TestimonialCarousel = ({ customers }) => {
   );
 };
 
-const customers = ({ customers, testimonialIndex }) => {
+const Customers = ({ customers, testimonialIndex }) => {
   const [liked, setLiked] = useState(false);
   return (
     <>

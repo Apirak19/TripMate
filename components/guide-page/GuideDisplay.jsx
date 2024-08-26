@@ -22,8 +22,8 @@ const GuideDisplay = () => {
         <section className="flex flex-col md:flex-row gap-4">
           <div className="w-full flex flex-col gap-4 items-center">
             <section className="flex flex-wrap gap-5 justify-center py-5">
-              {filteredData.map((guide) => (
-                <GuideCard guide={guide} />
+              {filteredData.map((guide, index) => (
+                <GuideCard guide={guide} key={index}/>
               ))}
             </section>
           </div>
