@@ -15,6 +15,7 @@ const TripOption = ({ attractionData, guideData }) => {
   const [endDate, setEndDate] = useState(today);
   const [numberOfDay, setNumberOfDay] = useState(1);
   const [destination, setDestination] = useState(null);
+  const [payable, setPayable] = useState(false);
   useEffect(() => {
     if (isOneDayTrip) {
       setNumberOfDay(1);
@@ -37,6 +38,12 @@ const TripOption = ({ attractionData, guideData }) => {
   useEffect(() => {
     console.log(numberOfDay * 2000);
   }, [numberOfDay]);
+
+  useEffect(() => {
+    if (isOneDayTrip !== null && destination !== null) {
+      setPayable(true);
+    }
+  }, [isOneDayTrip, destination]);
 
   const handleDestinationSelect = (e) => {
     setDestination(e.target.value);
@@ -190,7 +197,7 @@ const TripOption = ({ attractionData, guideData }) => {
             </div>
           )}
 
-          {isOneDayTrip && destination && (
+          {isOneDayTrip !== null && destination && (
             <div className="flex gap-4">
               <p className="text-xl font-semibold">Total:</p>
               <p className="text-xl">
@@ -200,7 +207,12 @@ const TripOption = ({ attractionData, guideData }) => {
             </div>
           )}
 
-          <button className="bg-blue-400 text-white font-bold py-4 px-3 rounded-lg transform hover:scale-[101%]">Book now</button>
+          <button
+            className="bg-blue-400 text-white font-bold py-4 px-3 rounded-lg transform hover:scale-[101%] disabled:bg-slate-200 disabled:transform-none"
+            disabled={!payable}
+          >
+            Book now
+          </button>
         </div>
       </article>
     </section>
