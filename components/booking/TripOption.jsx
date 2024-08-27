@@ -16,6 +16,35 @@ const TripOption = ({ attractionData, guideData }) => {
   const [numberOfDay, setNumberOfDay] = useState(1);
   const [destination, setDestination] = useState(null);
   const [payable, setPayable] = useState(false);
+
+  const StripeCheckout = async () => {
+    const response = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        checkoutTitle: `A ${numberOfDay}-Day Trip in ${destination} with ${guideData.guide_firstname} ${guideData.guide_lastname}`,
+        total: guideData.guide_wage * numberOfDay,
+      }),
+    });
+
+    await fetch("/api/create-booking", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        isOneDayTrip,
+        startDate,
+        endDate,
+      }),
+    });
+
+    const data = await response.json();
+    if (data.url) {
+      window.location.href = data.url; // Redirects to the Stripe checkout page
+    } else {
+      console.error("Failed to create checkout session");
+    }
+  };
+
   useEffect(() => {
     if (isOneDayTrip) {
       setNumberOfDay(1);
@@ -55,6 +84,18 @@ const TripOption = ({ attractionData, guideData }) => {
     } else if (e.target.value === "Multiple day trip") {
       setIsOneDayTrip(false);
     }
+  };
+
+  const disabledDates = [
+    dayjs("2024-09-15"),
+    dayjs("2024-09-20"),
+    dayjs("2024-10-01"),
+  ];
+
+  const shouldDisableDate = (date) => {
+    return disabledDates.some((disabledDate) =>
+      date.isSame(disabledDate, "day")
+    );
   };
   return (
     <section className="w-full flex gap-4">
@@ -120,6 +161,7 @@ const TripOption = ({ attractionData, guideData }) => {
                     setStartDate(e);
                     setEndDate(e);
                   }}
+                  shouldDisableDate={shouldDisableDate}
                 />
               </DemoContainer>
             </LocalizationProvider>
@@ -210,6 +252,7 @@ const TripOption = ({ attractionData, guideData }) => {
           <button
             className="bg-blue-400 text-white font-bold py-4 px-3 rounded-lg transform hover:scale-[101%] disabled:bg-slate-200 disabled:transform-none"
             disabled={!payable}
+            onClick={StripeCheckout}
           >
             Book now
           </button>
