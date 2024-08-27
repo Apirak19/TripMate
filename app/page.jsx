@@ -7,13 +7,12 @@ import PopularPlace from "@/components/Homepage/PopularPlace";
 
 const Home = () => {
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="w-full flex flex-col items-center pb-4">
       <Hero />
       <TripCategory />
       <PopularPlace />
       <SuggestedTrip />
       <Testimonial />
-      <footer className="h-10">footer</footer>
     </div>
   );
 };
