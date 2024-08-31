@@ -46,7 +46,10 @@ const GuideCard = ({ guide }) => {
           <span>Fluent in </span>
           {guide.guide_language.map((item, index) => (
             <>
-              <span className="font-bold text-blue-400 cursor-pointer hover:underline" key={index}>
+              <span
+                className="font-bold text-blue-400 cursor-pointer hover:underline"
+                key={index}
+              >
                 {item}
               </span>
               {index === guide.guide_language.length - 1 ? "" : <span>, </span>}
@@ -76,13 +79,15 @@ const GuideCard = ({ guide }) => {
 
         <div className="flex gap-4">
           <Link href={`/guides/${guide.guide_id}`} className="w-full">
-          <button className="w-full p-2 border-2 border-blue-400 rounded-lg transform hover:scale-105">
-            View Profile
-          </button>
+            <button className="w-full p-2 border-2 border-blue-400 rounded-lg transform hover:scale-105">
+              View Profile
+            </button>
           </Link>
-          <button className="w-full p-2 bg-blue-400 text-white rounded-lg transform hover:scale-105">
-            Hire
-          </button>
+          <Link href={`/booking?guide_id=${guide.guide_id}`} className="w-full">
+            <button className="w-full p-2 bg-blue-400 text-white rounded-lg transform hover:scale-105">
+              Hire
+            </button>
+          </Link>
         </div>
       </div>
     </article>

@@ -5,6 +5,10 @@ import TripOption from "@/components/booking/TripOption";
 const Booking = async ({ searchParams }) => {
   const guideId = searchParams.guide_id;
   console.log(guideId);
+  const resBooking = await connectionPool.query(
+    `SELECT * FROM booking WHERE guide_id = $1 AND status = 'success'`,
+    [guideId]
+  );
   const resGuide = await connectionPool.query(
     `SELECT * FROM guides WHERE guide_id = $1`,
     [guideId]
@@ -19,7 +23,9 @@ const Booking = async ({ searchParams }) => {
   };
   let whereCondition = "WHERE ";
   let availableDesdination = [];
-  console.log("guideData", resGuide.rows[0]);
+  // console.log("guideData", resGuide.rows[0]);
+  // console.log("disabledDate", resBooking.rows);
+  const bookingData = await resBooking.rows;
   const guideData = await resGuide.rows[0];
   guideData.guide_preferred_region.map((item, index) => {
     availableDesdination.push(item);
@@ -109,7 +115,11 @@ const Booking = async ({ searchParams }) => {
           </div>
         </article>
 
-        <TripOption attractionData={attractionData} guideData={guideData} />
+        <TripOption
+          attractionData={attractionData}
+          guideData={guideData}
+          bookingData={bookingData}
+        />
       </div>
     </section>
   );
