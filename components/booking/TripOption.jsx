@@ -7,7 +7,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import Snackbar from '@mui/material/Snackbar';
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 const TripOption = ({ attractionData, guideData, bookingData }) => {
   const today = dayjs(new Date());
@@ -19,11 +20,19 @@ const TripOption = ({ attractionData, guideData, bookingData }) => {
   const [numberOfDay, setNumberOfDay] = useState(1);
   const [destination, setDestination] = useState(null);
   const [payable, setPayable] = useState(false);
-  const [errorSnackbar, setErrorSnackbar] = useState(false)
-  const [clickable, setClickable] = useState(true)
+  const [errorSnackbar, setErrorSnackbar] = useState(false);
+  const [clickable, setClickable] = useState(true);
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setErrorSnackbar(false);
+  };
 
   const handleBookNow = async () => {
-    setClickable(false)
+    setClickable(false);
     // const bookingResponse = await fetch("/api/create-booking", {
     //   method: "POST",
     //   headers: { "Content-Type": "application/json" },
@@ -57,7 +66,8 @@ const TripOption = ({ attractionData, guideData, bookingData }) => {
       window.location.href = data.url; // Redirects to the Stripe checkout page
     } else {
       console.error("Failed to create checkout session");
-      setErrorSnackbar(true)
+      setErrorSnackbar(true);
+      setClickable(true);
     }
   };
 
@@ -161,11 +171,20 @@ const TripOption = ({ attractionData, guideData, bookingData }) => {
     <section className="w-full flex gap-4">
       <Snackbar
         open={errorSnackbar}
-        autoHideDuration={6000}
-        // onClose={handleClose}
-        message="Note archived"
+        autoHideDuration={3000}
+        onClose={handleClose}
         // action={action}
-      />
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          // onClose={handleClose}
+          severity="error"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          Guide is not available in the selected date
+        </Alert>
+      </Snackbar>
       {/* booking form */}
       <article className="w-full p-4 bg-white rounded-lg flex flex-col gap-2">
         <h1 className="text-3xl font-bold">Trip options</h1>
@@ -319,11 +338,21 @@ const TripOption = ({ attractionData, guideData, bookingData }) => {
           )}
 
           <button
-            className="bg-blue-400 text-white font-bold py-4 px-3 rounded-lg transform hover:scale-[101%] disabled:bg-slate-200 disabled:transform-none"
+            className="bg-blue-400 text-white font-bold py-4 px-3 rounded-lg transform hover:scale-[101%] disabled:bg-slate-200 disabled:transform-none flex justify-center items-center gap-4"
             disabled={!payable || !clickable}
             onClick={handleBookNow}
           >
-            Book now
+            {clickable ? (
+              "Book now"
+            ) : (
+              <>
+                <span>Processing</span>
+                <div
+                  className="inline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] text-slate-400"
+                  role="status"
+                ></div>
+              </>
+            )}
           </button>
         </div>
       </article>
