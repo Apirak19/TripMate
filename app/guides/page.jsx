@@ -1,13 +1,28 @@
-import React from "react";
-
+"use client";
+import React, { useEffect, useContext } from "react";
+import Header from "@/components/guide-page/Header";
+import GuideCard from "@/components/guide-page/GuideCard";
+import FilterRadio from "@/components/guide-page/FilterRadio";
+import GuideDisplay from "@/components/guide-page/GuideDisplay";
+import GuideFilterProvider from "@/contexts/guideFilter";
 
 const GuidePage = () => {
+  // const { filteredData, loading, error } = useContext(GuideFilterContext);
   return (
-    <div className="w-full md:py-32 py-32 flex flex-col items-center gap-20">
-      <h1 className="text-center">All Available Guides</h1>
-      <button className="text-white">Hello</button>
-      <p className="text-center">This is a guide page</p>
-    </div>
+    <GuideFilterProvider>
+      <div className="w-full flex flex-col">
+        {/* header */}
+        <Header />
+
+        {/* body */}
+        <div className="w-full max-w-[1140px] flex flex-col mx-auto gap-4 ">
+          <main className="w-full flex flex-col gap-4 px-4 md:flex-row relative">
+            <FilterRadio />
+            <GuideDisplay />
+          </main>
+        </div>
+      </div>
+    </GuideFilterProvider>
   );
 };
 
