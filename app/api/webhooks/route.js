@@ -31,25 +31,33 @@ export async function POST(req) {
   switch (event.type) {
     case "checkout.session.completed":
       const session = event.data.object;
+      const bookingId = session.metadata.booking_id;
+      const guideId = session.metadata.guide_id;
+      const startDate = new Date(session.metadata.start_date);
+      const endDate = new Date(session.metadata.end_date);
 
-      // Update the transaction record to mark it as paid
-      await connectionPool.query(
-        `
-        UPDATE transactions
-        SET is_paid = true
-        WHERE session_id = $1
-        `,
-        [session.id]
-      );
+      try {
+        // Update the "pending" booking to "confirmed"
+        await connectionPool.query(
+          `
+          UPDATE booking
+          SET status = 'success'
+          WHERE booking_id = $1
+          `,
+          [bookingId]
+        );
+      } catch (err) {
+        console.error("Database query failed.", err.message);
+        return new NextResponse(`Database Error: ${err.message}`, {
+          status: 500,
+        });
+      }
 
       break;
-
-    // Add more cases to handle other event types if necessary
 
     default:
       console.log(`Unhandled event type ${event.type}`);
   }
 
-  // Return a 200 response to acknowledge receipt of the event
   return new NextResponse("Event received", { status: 200 });
 }
