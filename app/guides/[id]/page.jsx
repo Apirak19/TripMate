@@ -5,6 +5,7 @@ import IndividualReview from "@/components/Homepage/IndividualReview";
 import TripReview from "@/components/guide-profile/TripReview";
 import PostCard from "@/components/guide-profile/PostCard";
 import Link from "next/link";
+import Header from "@/components/guide-profile/Header";
 
 const GuideProfile = async ({ params }) => {
   const { id } = params;
@@ -149,37 +150,8 @@ const GuideProfile = async ({ params }) => {
   return (
     <section className="w-full flex justify-center">
       <div className="w-full max-w-[1140px] relative">
-        {/* wallpaper */}
-        <article className="w-full h-[500px] flex items-end">
-          <div className="w-full bg-gray-400 h-[500px] absolute -z-20 rounded-b-3xl"></div>
-
-          {/* profile */}
-          <div className="pb-4 px-4 w-full flex justify-between">
-            {/* left */}
-            <div className="flex gap-4">
-              <div className="w-[168px] h-[168px] bg-slate-50 rounded-3xl z-10"></div>
-              <div className="flex flex-col justify-end">
-                <h1 className="text-4xl font-bold">
-                  {guide.guide_firstname} {guide.guide_lastname}
-                </h1>
-                <p className="text-lg">{guide.followers} Follower</p>
-              </div>
-            </div>
-
-            {/* right */}
-            <div className="flex items-end gap-4">
-              <button className="border-blue-400 border-2 text-blue-400 bg-white px-4 py-2 rounded-lg w-[100px]">
-                Follow
-              </button>
-
-              <Link href={`/booking?guide_id=${guide.guide_id}`}>
-              <button className="bg-blue-400 text-white px-4 py-2 rounded-lg w-[100px]">
-                Hire
-                </button>
-              </Link>
-            </div>
-          </div>
-        </article>
+        {/* header */}
+        <Header guide={guide} />
 
         {/* bio */}
         <article className="w-full p-4 gap-4 flex">
@@ -189,11 +161,7 @@ const GuideProfile = async ({ params }) => {
             <div className="w-full p-4 bg-slate-300 rounded-xl">
               <div>
                 <h1 className="text-2xl font-semibold">Introduction</h1>
-                <h1 className="text-lg">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Autem nostrum earum veniam ducimus hic beatae nisi fugiat.
-                  Modi accusamus fuga aut veritatis, nihil iusto nam?
-                </h1>
+                <h1 className="text-lg">{guide.guide_intro}</h1>
               </div>
             </div>
 
@@ -253,7 +221,7 @@ const GuideProfile = async ({ params }) => {
 
             {/* posts */}
             {trips.map((trip, index) => (
-              <PostCard trip={trip} key={index} />
+              <PostCard trip={trip} key={index} guide={guide} />
             ))}
           </main>
         </article>
