@@ -10,6 +10,7 @@ import {
 import DrawerComponent from "./DrawerComponent";
 import DarkModeButton from "./DarkModeButton";
 import Link from "next/link";
+import UserProfile from "./UserProfile";
 
 const pages = [
   {
@@ -80,25 +81,7 @@ const NavigationBar = () => {
             </Box>
           </div>
 
-          <Box
-            sx={{
-              display: { xs: "none", md: "flex" },
-              alignItems: "center",
-              gap: "15%",
-            }}
-          >
-            <DarkModeButton />
-            <Button className="text-white hover:bg-white hover:text-blue-500  rounded-md px-3 text-nowrap">
-              Log in
-            </Button>
-          </Box>
-
-          <Box
-            sx={{ flexGrow: 0, display: { xs: "flex", md: "none" }, gap: "5%" }}
-          >
-            <DarkModeButton />
-            <DrawerComponent />
-          </Box>
+          <UserProfile />
         </Toolbar>
       </Container>
     </AppBar>
