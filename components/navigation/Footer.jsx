@@ -14,8 +14,8 @@ const pages = ["Products", "Pricing", "Blog"];
 
 const Footer = () => {
   return (
-    <section className="w-full bg-mainColor flex justify-center">
-      <div className="w-full max-w-[1536px] flex justify-between p-6">
+    <section className="w-full bg-mainColor flex justify-center shadow-card-shadow">
+      <div className="w-full max-w-[1536px] flex flex-col md:flex-row gap-8 justify-between py-4 px-6">
         <div className="w-full max-w-[500px] flex flex-col text-white">
           <Typography
             variant="h4"
@@ -34,15 +34,7 @@ const Footer = () => {
           >
             TripMate
           </Typography>
-          <address>
-            Lorem ipsum dolor sit amet.
-              </address>
-              <address>
-            Lorem ipsum dolor sit amet.
-              </address>
-              <address>
-            Lorem ipsum dolor sit amet.
-          </address>
+          <p>Explore Thailand with Local Experts</p>
         </div>
         <div className="text-nowrap flex items-end text-white font-semibold">
           Copyright © 2024

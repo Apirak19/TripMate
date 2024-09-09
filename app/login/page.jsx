@@ -14,8 +14,8 @@ const LoginPage = () => {
   };
   return (
     <main
-      className="w-full bg-slate-400 flex justify-center items-center p-4"
-      style={{ height: "calc(100vh - 64px - 162px)" }}
+      className="w-full bg-[#536ea4] flex justify-center items-center p-4"
+      style={{ height: "calc(100vh - 64px - 114px)" }}
     >
       <LoginForm/>
     </main>

@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Link from "next/link";
 
 const LoginForm = () => {
   const [userEmail, setUserEmail] = useState("");
@@ -41,10 +42,11 @@ const LoginForm = () => {
 
   return (
     <form className="w-full max-w-[450px]" onSubmit={login}>
-      <div className="bg-blue-400 flex flex-col gap-2 p-8 justify-center rounded-lg">
-        <h1 className="text-center text-2xl text-white font-semibold">Log in</h1>
+      <div className="bg-mainColor flex flex-col gap-2 p-10 justify-center rounded-lg">
+        <h1 className="text-center text-2xl text-white font-semibold">
+          Log in
+        </h1>
         {error && <p className="text-red-500">{error}</p>} {/* Error message */}
-
         <p className="text-white font-semibold">Email</p>
         <input
           type="email"
@@ -53,7 +55,6 @@ const LoginForm = () => {
           value={userEmail}
           onChange={(e) => setUserEmail(e.target.value)}
         />
-
         <p className="text-white font-semibold">Password</p>
         <input
           type="password"
@@ -62,14 +63,16 @@ const LoginForm = () => {
           value={userPassword}
           onChange={(e) => setUserPassword(e.target.value)}
         />
-
         <button
           className="bg-white text-blue-400 font-semibold p-2 mt-2 rounded hover:bg-slate-50"
           type="submit"
         >
           Login
         </button>
-        <p className="text-end">Remember me</p>
+        <div className="flex justify-between mt-2 text-white">
+          <Link href={"/forgotten"}>Forgotten password</Link>
+          <Link href={"/register"}>Create an account</Link>
+        </div>
       </div>
     </form>
   );
