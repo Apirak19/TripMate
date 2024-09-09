@@ -8,12 +8,14 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import ErrorIcon from "@mui/icons-material/Error";
+import RegisterDate from "./RegisterDate";
 
 const RegisterForm = () => {
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const [birthDate, setBirthDate] = useState(null);
-  const [error, setError] = useState(null); // For error handling
+  // const [error, setError] = useState({});
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
@@ -33,46 +35,40 @@ const RegisterForm = () => {
     localStorage.setItem("formData", JSON.stringify(updatedFormData));
   };
 
-  const login = async (e) => {
-    e.preventDefault(); // Corrected method
+  const register = async (e) => {
+    e.preventDefault();
 
-    // Basic form validation
-    if (!userEmail || !userPassword) {
-      setError("Email and password are required.");
-      return;
-    }
+    // if (!formData.firstname) {
+    //   setError("Please fullfill every fields");
+    //   return;
+    // }
 
     try {
-      const result = await fetch("/api/login", {
+      if (formData.password !== formData.repassword) {
+        console.log("not matched");
+        return;
+      } else {
+      }
+      const result = await fetch("/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: userEmail,
-          password: userPassword,
+          ...formData,
         }),
       });
 
-      if (!result.ok) {
-        throw new Error("Failed to login. Please try again.");
-      }
+      // if (!result.ok) {
+      //   throw new Error("Failed to register. Please try again.");
+      // }
 
       const data = await result.json();
-      console.log(data);
+      console.log("data from register function", data);
     } catch (err) {
       console.error(err);
       setError("Email or password is not correct");
     }
-  };
-
-  const shouldDisableDate = (date) => {
-    const today = dayjs();
-    const fifteenYearsAgo = today.subtract(15, "years");
-
-    const isFutureDate = date.isAfter(today);
-    const isFifteenYearsAgo = date.isBefore(fifteenYearsAgo);
-    return isFutureDate || !isFifteenYearsAgo;
   };
 
   useEffect(() => {
@@ -84,13 +80,19 @@ const RegisterForm = () => {
   return (
     <form
       className="w-full max-w-[450px] shadow-card-shadow rounded-lg"
-      onSubmit={login}
+      onSubmit={register}
     >
       <div className="bg-mainColor flex flex-col gap-2 px-8 py-5 pt-8 justify-center rounded-lg">
         <h1 className="text-center text-4xl text-white font-semibold mb-4">
           Register
         </h1>
-        {error && <p className="text-red-500">{error}</p>} {/* Error message */}
+        {/* Error message */}
+        {/* {error && (
+          <p className="text-red-800 font-bold flex items-center gap-2">
+            {" "}
+            <ErrorIcon /> {error}
+          </p>
+        )} */}
         <p className="text-white font-semibold">First name</p>
         <input
           type="text"
@@ -122,25 +124,8 @@ const RegisterForm = () => {
           }}
         />
         <p className="text-white font-semibold">Date of birth</p>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer
-            components={["DatePicker"]}
-            sx={{ width: "100%", paddingTop: "0px" }}
-          >
-            <DatePicker
-              value={birthDate}
-              onChange={(e) => {
-                console.log("change date", e);
-              }}
-              shouldDisableDate={shouldDisableDate}
-              sx={{
-                backgroundColor: "#fff",
-                borderRadius: "5px",
-                padding: "0px",
-              }}
-            />
-          </DemoContainer>
-        </LocalizationProvider>
+        <RegisterDate formData={formData} setFormData={setFormData} />
+
         <p className="text-white font-semibold">Email</p>
         <input
           type="email"
@@ -173,7 +158,7 @@ const RegisterForm = () => {
         />
         {/* end */}
         <button
-          className="bg-white text-blue-500 font-extrabold p-2 mt-8 rounded hover:bg-slate-100"
+          className="bg-white text-blue-500 hover:text-blue-600 font-extrabold p-2 mt-8 rounded hover:bg-slate-200"
           type="submit"
         >
           Login
