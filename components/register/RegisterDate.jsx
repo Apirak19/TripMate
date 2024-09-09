@@ -6,7 +6,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 
-const RegisterDate = ({ formData, setFormData }) => {
+const RegisterDate = ({ registerData, setRegisterData }) => {
   const shouldDisableDate = (date) => {
     const today = dayjs();
     const fifteenYearsAgo = today.subtract(15, "years");
@@ -23,8 +23,11 @@ const RegisterDate = ({ formData, setFormData }) => {
       >
         <DatePicker
           onChange={(e) => {
-            setFormData({ ...formData, ["dateOfBirth"]: e.toISOString() });
-            console.log(formData);
+            setRegisterData({
+              ...registerData,
+              ["dateOfBirth"]: e.toISOString(),
+            });
+            console.log(registerData);
           }}
           shouldDisableDate={shouldDisableDate}
           sx={{

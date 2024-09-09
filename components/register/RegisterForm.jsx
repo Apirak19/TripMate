@@ -1,6 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -16,7 +19,7 @@ const RegisterForm = () => {
   const [userPassword, setUserPassword] = useState("");
   const [birthDate, setBirthDate] = useState(null);
   // const [error, setError] = useState({});
-  const [formData, setFormData] = useState({
+  const [registerData, setRegisterData] = useState({
     firstname: "",
     lastname: "",
     username: "",
@@ -26,25 +29,90 @@ const RegisterForm = () => {
     repassword: "",
   });
 
+  const isUnique = async () => {
+    
+  }
+
+  const registerSchema = z.object({
+    firstname: z
+      .string()
+      .min(2, { message: "Firstname must be at least 2 characters" }),
+    lastname: z
+      .string()
+      .min(2, { message: "Lastname must be at least 2 characters" }),
+    username: z
+      .string()
+      .min(2, { message: "Username must be at least 2 characters" })
+    .refine(),
+    dateOfBirth: z.string(),
+    email: z.string(),
+    password: z.string(),
+  });
+
+  const { register, handleSubmit } = useForm({
+    resolver: zodResolver(registerSchema),
+  });
+
+  useEffect(() => {
+    const inputData = localStorage.getItem("registerData");
+    if (!inputData) {
+      localStorage.setItem(
+        "registerData",
+        JSON.stringify({
+          firstname: "",
+          lastname: "",
+          username: "",
+          dateOfBirth: "",
+          email: "",
+          password: "",
+          repassword: "",
+        })
+      );
+    }
+    setRegisterData(JSON.parse(inputData));
+    console.log("inputData", JSON.parse(inputData));
+  }, []);
+
   const handleFormChange = (field, e) => {
     const updatedFormData = {
-      ...formData,
+      ...registerData,
       [field]: e.target.value,
     };
-    setFormData(updatedFormData);
-    localStorage.setItem("formData", JSON.stringify(updatedFormData));
+    setRegisterData(updatedFormData);
+    localStorage.setItem("registerData", JSON.stringify(updatedFormData));
   };
 
-  const register = async (e) => {
-    e.preventDefault();
+  const registerNow = async () => {
+    setRegisterData({
+      firstname: "",
+      lastname: "",
+      username: "",
+      dateOfBirth: "",
+      email: "",
+      password: "",
+      repassword: "",
+    });
 
-    // if (!formData.firstname) {
+    localStorage.setItem(
+      "registerData",
+      JSON.stringify({
+        firstname: "",
+        lastname: "",
+        username: "",
+        dateOfBirth: "",
+        email: "",
+        password: "",
+        repassword: "",
+      })
+    );
+
+    // if (!registerData.firstname) {
     //   setError("Please fullfill every fields");
     //   return;
     // }
 
     try {
-      if (formData.password !== formData.repassword) {
+      if (registerData.password !== registerData.repassword) {
         console.log("not matched");
         return;
       } else {
@@ -55,7 +123,7 @@ const RegisterForm = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          ...formData,
+          ...registerData,
         }),
       });
 
@@ -71,16 +139,16 @@ const RegisterForm = () => {
     }
   };
 
-  useEffect(() => {
-    const inputData = localStorage.getItem("formData");
-    setFormData(JSON.parse(inputData));
-    console.log("inputData", JSON.parse(inputData));
-  }, []);
+  const onSubmit = (data) => {
+    console.log(data);
+
+    registerNow();
+  };
 
   return (
     <form
       className="w-full max-w-[450px] shadow-card-shadow rounded-lg"
-      onSubmit={register}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className="bg-mainColor flex flex-col gap-2 px-8 py-5 pt-8 justify-center rounded-lg">
         <h1 className="text-center text-4xl text-white font-semibold mb-4">
@@ -98,7 +166,7 @@ const RegisterForm = () => {
           type="text"
           placeholder="your first name"
           className="p-2 rounded"
-          value={formData.firstname}
+          value={registerData.firstname}
           onChange={(e) => {
             handleFormChange("firstname", e);
           }}
@@ -108,7 +176,7 @@ const RegisterForm = () => {
           type="text"
           placeholder="your last name"
           className="p-2 rounded"
-          value={formData.lastname}
+          value={registerData.lastname}
           onChange={(e) => {
             handleFormChange("lastname", e);
           }}
@@ -118,20 +186,23 @@ const RegisterForm = () => {
           type="text"
           placeholder="username to be displayed "
           className="p-2 rounded"
-          value={formData.username}
+          value={registerData.username}
           onChange={(e) => {
             handleFormChange("username", e);
           }}
         />
         <p className="text-white font-semibold">Date of birth</p>
-        <RegisterDate formData={formData} setFormData={setFormData} />
+        <RegisterDate
+          registerData={registerData}
+          setRegisterData={setRegisterData}
+        />
 
         <p className="text-white font-semibold">Email</p>
         <input
           type="email"
           placeholder="yourMail@email.com"
           className="p-2 rounded"
-          value={formData.email}
+          value={registerData.email}
           onChange={(e) => {
             handleFormChange("email", e);
           }}
@@ -141,7 +212,7 @@ const RegisterForm = () => {
           type="password"
           placeholder="password must contain at least 8 characters"
           className="p-2 rounded"
-          value={formData.password}
+          value={registerData.password}
           onChange={(e) => {
             handleFormChange("password", e);
           }}
@@ -151,18 +222,21 @@ const RegisterForm = () => {
           type="password"
           placeholder="password must contain at least 8 characters"
           className="p-2 rounded"
-          value={formData.repassword}
+          value={registerData.repassword}
           onChange={(e) => {
             handleFormChange("repassword", e);
           }}
         />
-        {/* end */}
+
+        {/* button */}
         <button
           className="bg-white text-blue-500 hover:text-blue-600 font-extrabold p-2 mt-8 rounded hover:bg-slate-200"
           type="submit"
         >
           Login
         </button>
+
+        {/* form footer */}
         <div className="flex flex-col justify-between mt-4 text-white">
           <Link
             href={"/forgotten"}
