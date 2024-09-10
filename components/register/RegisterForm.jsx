@@ -4,34 +4,47 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
-import ErrorIcon from "@mui/icons-material/Error";
 import RegisterDate from "./RegisterDate";
+import { debounce } from "lodash";
+import ErrorIcon from "@mui/icons-material/Error";
+import dayjs from "dayjs";
+import { redirect } from "next/navigation";
 
 const RegisterForm = () => {
-  const [userEmail, setUserEmail] = useState("");
-  const [userPassword, setUserPassword] = useState("");
-  const [birthDate, setBirthDate] = useState(null);
-  // const [error, setError] = useState({});
-  const [registerData, setRegisterData] = useState({
-    firstname: "",
-    lastname: "",
-    username: "",
-    dateOfBirth: "",
-    email: "",
-    password: "",
-    repassword: "",
-  });
-
-  const isUnique = async () => {
-    
+  const [shouldRemove, setShouldRemove] = useState(false);
+  let initialData;
+  if (typeof window !== "undefined" && localStorage.getItem("registerData")) {
+    initialData = JSON.parse(localStorage.getItem("registerData")) || {
+      firstname: "",
+      lastname: "",
+      username: "",
+      dateOfBirth: "",
+      email: "",
+      password: "",
+      repassword: "",
+    };
   }
+
+  const checkIsUnique = async (field, value) => {
+    const result = await fetch("/api/register-check", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        check: field,
+        input: value,
+      }),
+    });
+    const isUnique = await result.json();
+    console.log("result", isUnique);
+    return isUnique;
+  };
+  const debouncedCheckIsUnique = debounce(checkIsUnique, 500);
+
+  const checkPassword = (value) => {
+    return formValues.password === value;
+  };
 
   const registerSchema = z.object({
     firstname: z
@@ -43,106 +56,101 @@ const RegisterForm = () => {
     username: z
       .string()
       .min(2, { message: "Username must be at least 2 characters" })
-    .refine(),
-    dateOfBirth: z.string(),
-    email: z.string(),
-    password: z.string(),
+      .refine(
+        async (username) => {
+          const exists = await checkIsUnique("username", username);
+          return !exists;
+        },
+        {
+          message: "This username has already been used",
+        }
+      ),
+    dateOfBirth: z
+      .string()
+      .min(1, { message: "Date of birth is required" })
+      .refine(
+        (value) => {
+          const date = dayjs(value);
+          const today = dayjs();
+          const fifteenYearsAgo = today.subtract(15, "years");
+          return date.isBefore(fifteenYearsAgo);
+        },
+        { message: "You must be at least 15 years old" }
+      ),
+    email: z
+      .string()
+      .email({ message: "Invalid email address" })
+      .refine(
+        async (email) => {
+          const exists = await checkIsUnique("email", email);
+          return !exists;
+        },
+        {
+          message: "This email has already been registered",
+        }
+      ),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" })
+      .refine((value) => /[A-Z]/.test(value), {
+        message: "Password must contain at least one uppercase letter",
+      })
+      .refine((value) => /[a-z]/.test(value), {
+        message: "Password must contain at least one lowercase letter",
+      })
+      .refine((value) => /[0-9]/.test(value), {
+        message: "Password must contain at least one digit",
+      }),
+    repassword: z.string().refine((value) => checkPassword(value), {
+      message: "Passwords do not match",
+    }),
   });
 
-  const { register, handleSubmit } = useForm({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    setError,
+    clearErrors,
+    watch,
+    formState: { errors },
+  } = useForm({
     resolver: zodResolver(registerSchema),
+    defaultValues: initialData,
   });
+
+  const formValues = watch();
 
   useEffect(() => {
-    const inputData = localStorage.getItem("registerData");
-    if (!inputData) {
-      localStorage.setItem(
-        "registerData",
-        JSON.stringify({
-          firstname: "",
-          lastname: "",
-          username: "",
-          dateOfBirth: "",
-          email: "",
-          password: "",
-          repassword: "",
-        })
-      );
+    if (!shouldRemove) {
+      console.log("watched effect: ", formValues);
+      console.log("should remove", shouldRemove);
+      localStorage.setItem("registerData", JSON.stringify(formValues));
     }
-    setRegisterData(JSON.parse(inputData));
-    console.log("inputData", JSON.parse(inputData));
-  }, []);
+  }, [formValues, shouldRemove]);
 
-  const handleFormChange = (field, e) => {
-    const updatedFormData = {
-      ...registerData,
-      [field]: e.target.value,
-    };
-    setRegisterData(updatedFormData);
-    localStorage.setItem("registerData", JSON.stringify(updatedFormData));
-  };
-
-  const registerNow = async () => {
-    setRegisterData({
-      firstname: "",
-      lastname: "",
-      username: "",
-      dateOfBirth: "",
-      email: "",
-      password: "",
-      repassword: "",
-    });
-
-    localStorage.setItem(
-      "registerData",
-      JSON.stringify({
-        firstname: "",
-        lastname: "",
-        username: "",
-        dateOfBirth: "",
-        email: "",
-        password: "",
-        repassword: "",
-      })
-    );
-
-    // if (!registerData.firstname) {
-    //   setError("Please fullfill every fields");
-    //   return;
-    // }
-
+  const registerNow = async (formData) => {
     try {
-      if (registerData.password !== registerData.repassword) {
-        console.log("not matched");
-        return;
-      } else {
-      }
       const result = await fetch("/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          ...registerData,
-        }),
+        body: JSON.stringify(formData),
       });
-
-      // if (!result.ok) {
-      //   throw new Error("Failed to register. Please try again.");
-      // }
-
       const data = await result.json();
       console.log("data from register function", data);
+      setShouldRemove(true);
+      localStorage.removeItem("registerData");
+      window.location.href = "/";
     } catch (err) {
       console.error(err);
-      setError("Email or password is not correct");
     }
   };
 
-  const onSubmit = (data) => {
-    console.log(data);
-
-    registerNow();
+  const onSubmit = async (data) => {
+    console.log("form data: ", data);
+    await registerNow(data);
   };
 
   return (
@@ -150,107 +158,119 @@ const RegisterForm = () => {
       className="w-full max-w-[450px] shadow-card-shadow rounded-lg"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <div className="bg-mainColor flex flex-col gap-2 px-8 py-5 pt-8 justify-center rounded-lg">
+      <div className="bg-mainColor flex flex-col gap-2 px-5 py-8 md:px-8  justify-center rounded-lg">
         <h1 className="text-center text-4xl text-white font-semibold mb-4">
           Register
         </h1>
-        {/* Error message */}
-        {/* {error && (
-          <p className="text-red-800 font-bold flex items-center gap-2">
-            {" "}
-            <ErrorIcon /> {error}
-          </p>
-        )} */}
+
         <p className="text-white font-semibold">First name</p>
         <input
           type="text"
           placeholder="your first name"
           className="p-2 rounded"
-          value={registerData.firstname}
-          onChange={(e) => {
-            handleFormChange("firstname", e);
-          }}
+          {...register("firstname")}
         />
+        {errors.firstname && (
+          <div className="flex gap-2 text-red-900 font-extrabold">
+            <ErrorIcon />
+            <p className="">{errors.firstname.message}</p>
+          </div>
+        )}
+
         <p className="text-white font-semibold">Last name</p>
         <input
           type="text"
           placeholder="your last name"
           className="p-2 rounded"
-          value={registerData.lastname}
-          onChange={(e) => {
-            handleFormChange("lastname", e);
-          }}
+          {...register("lastname")}
         />
+        {errors.lastname && (
+          <div className="flex gap-2 text-red-900 font-extrabold">
+            <ErrorIcon />
+            <p className="">{errors.lastname.message}</p>
+          </div>
+        )}
+
         <p className="text-white font-semibold">Username</p>
         <input
           type="text"
           placeholder="username to be displayed "
           className="p-2 rounded"
-          value={registerData.username}
-          onChange={(e) => {
-            handleFormChange("username", e);
-          }}
+          {...register("username")}
         />
+        {errors.username && (
+          <div className="flex gap-2 text-red-900 font-extrabold">
+            <ErrorIcon />
+            <p className="">{errors.username.message}</p>
+          </div>
+        )}
+
         <p className="text-white font-semibold">Date of birth</p>
         <RegisterDate
-          registerData={registerData}
-          setRegisterData={setRegisterData}
+          register={register}
+          setValue={setValue}
+          watch={watch}
+          setError={setError}
+          clearErrors={clearErrors}
         />
+        {errors.dateOfBirth && (
+          <div className="flex gap-2 text-red-900 font-extrabold">
+            <ErrorIcon />
+            <p className="">{errors.dateOfBirth.message}</p>
+          </div>
+        )}
 
         <p className="text-white font-semibold">Email</p>
         <input
           type="email"
           placeholder="yourMail@email.com"
           className="p-2 rounded"
-          value={registerData.email}
-          onChange={(e) => {
-            handleFormChange("email", e);
-          }}
+          {...register("email")}
         />
+        {errors.email && (
+          <div className="flex gap-2 text-red-900 font-extrabold">
+            <ErrorIcon />
+            <p className="">{errors.email.message}</p>
+          </div>
+        )}
+
         <p className="text-white font-semibold">Password</p>
         <input
           type="password"
-          placeholder="password must contain at least 8 characters"
+          placeholder="At least 8 characters including A-Z, a-z, and 0-9"
           className="p-2 rounded"
-          value={registerData.password}
-          onChange={(e) => {
-            handleFormChange("password", e);
-          }}
+          {...register("password")}
         />
+        {errors.password && (
+          <div className="flex gap-2 text-red-900 font-extrabold">
+            <ErrorIcon />
+            <p className="">{errors.password.message}</p>
+          </div>
+        )}
+
         <p className="text-white font-semibold">Confirm password</p>
         <input
           type="password"
-          placeholder="password must contain at least 8 characters"
+          placeholder="At least 8 characters including A-Z, a-z, and 0-9"
           className="p-2 rounded"
-          value={registerData.repassword}
-          onChange={(e) => {
-            handleFormChange("repassword", e);
-          }}
+          {...register("repassword")}
         />
+        {errors.repassword && (
+          <div className="flex gap-2 text-red-900 font-extrabold">
+            <ErrorIcon />
+            <p className="">{errors.repassword.message}</p>
+          </div>
+        )}
 
         {/* button */}
         <button
           className="bg-white text-blue-500 hover:text-blue-600 font-extrabold p-2 mt-8 rounded hover:bg-slate-200"
           type="submit"
         >
-          Login
+          Register
         </button>
 
-        {/* form footer */}
-        <div className="flex flex-col justify-between mt-4 text-white">
-          <Link
-            href={"/forgotten"}
-            className="font-semibold hover:text-slate-200"
-          >
-            Forgotten password
-          </Link>
-          <Link
-            href={"/register"}
-            className="font-semibold hover:text-slate-200"
-          >
-            Create an account
-          </Link>
-        </div>
+        
       </div>
     </form>
   );

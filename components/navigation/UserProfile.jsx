@@ -23,16 +23,18 @@ const UserProfile = () => {
         }}
       >
         <DarkModeButton />
-        <Button
-          className="text-white hover:bg-white hover:text-blue-500  rounded-md text-nowrap w-[100px] p-0 py-1 mt-1"
-          sx={{
-            color: "white",
-            fontSize: "1rem",
-            fontWeight: "bold",
-          }}
-        >
-          Log in
-        </Button>
+        <Link href={"/login"}>
+          <Button
+            className="text-white hover:bg-white hover:text-blue-500  rounded-md text-nowrap w-[100px] p-0 py-1 mt-1"
+            sx={{
+              color: "white",
+              fontSize: "1rem",
+              fontWeight: "bold",
+            }}
+          >
+            Log in
+          </Button>
+        </Link>
         <div className="w-10 h-10 bg-white"></div>
       </Box>
 
