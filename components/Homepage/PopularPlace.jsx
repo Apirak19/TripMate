@@ -14,7 +14,7 @@ const PopularPlace = async () => {
   if (error) {
     console.error("Error:", error);
   } else {
-    console.log("Attraction trip counts:", attractions);
+    // console.log("Attraction trip counts:", attractions);
   }
   const attractionsData = [
     {

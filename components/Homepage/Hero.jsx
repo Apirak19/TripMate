@@ -4,8 +4,12 @@ import React from "react";
 import Link from "next/link";
 import heroBg from "@/assets/images/hero-page.png";
 import Image from "next/image";
+import { signOut } from "next-auth/react";
 
 const Hero = () => {
+  const handleLogout = () => {
+    signOut({ callbackUrl: "/" });
+  };
   return (
     <div className="w-full relative">
       {/* <div className="w-full xs:py-10 sm:py-24 md:py-40 lg:px-20 flex flex-col items-center gap-20 md:gap-40">
@@ -16,6 +20,7 @@ const Hero = () => {
             see our Thai guide
           </button>
         </div> */}
+      <button onClick={handleLogout}>Log out</button>
       <Image src={heroBg} alt="hero" layout="responsive" />
       <div className="flex justify-center absolute top-2/3 w-full">
         <Link
